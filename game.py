@@ -78,9 +78,6 @@ keyS = False
 keyD = False
 
 while running:
-    #keep loop running at the right speed
-    
-    #Process input (events)
     while menu:
         clock.tick(FPS)
         for event in pygame.event.get():
