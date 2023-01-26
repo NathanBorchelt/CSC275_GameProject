@@ -1,6 +1,6 @@
 import pygame
 import random
-import MenuClass
+import MenuEntities
 import Player
 
 WIDTH = 1600
@@ -22,13 +22,14 @@ pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 #create sprite group and add the player sprite to it
 all_sprites = pygame.sprite.Group()
-menuCursor = MenuClass.MenuCursor() 
-startButton = MenuClass.MenuButton(HEIGHT/2, "res/startText.png")
-endButton = MenuClass.MenuButton(HEIGHT/2+80, "res/endText.png")
+menuCursor = MenuEntities.MenuCursor() 
+startButton = MenuEntities.MenuButton(HEIGHT/2, "res/startText.png")
+endButton = MenuEntities.MenuButton(HEIGHT/2+80, "res/endText.png")
 
 all_sprites.add(menuCursor)
 all_sprites.add(startButton)
 all_sprites.add(endButton)
+prevCursorPos = []
 
 
 #Game loop
@@ -57,7 +58,9 @@ while running:
                         game = True
                         all_sprites.empty()
                         player = Player.Player()
+                        cursor = Player.Cursor()
                         all_sprites.add(player)
+                        all_sprites.add(cursor)
                     if menuCursor.rect.y == endButton.rect.y:
                         running = False
                         menu = False
@@ -75,17 +78,21 @@ while running:
                 game = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    player.rect.y -= 100
-                if event.key == pygame.K_a:
-                    player.rect.x -= 100
-                if event.key == pygame.K_s:
-                    player.rect.y += 100
-                if event.key == pygame.K_d:
-                    player.rect.x += 100
-                if event.key == pygame.K_ESCAPE:
+                    cursor.rect.y -= 100
+                elif event.key == pygame.K_a:
+                    cursor.rect.x -= 100
+                elif event.key == pygame.K_s:
+                    cursor.rect.y += 100
+                elif event.key == pygame.K_d:
+                    cursor.rect.x += 100
+                elif event.key == pygame.K_SPACE:
+                    prevCursorPos.append(cursor.pos)
+
+                elif event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
-        print(player.rect.center)
+
+        
         all_sprites.update()       
         screen.fill(BLACK)
         boardImage = pygame.image.load("res/chessBoard.png")
