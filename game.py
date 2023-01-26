@@ -116,6 +116,7 @@ while running:
             # check for closing window
             if event.type == pygame.QUIT:
                 running = False
+                game = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     keyW = True
