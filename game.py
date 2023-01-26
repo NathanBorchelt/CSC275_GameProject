@@ -16,10 +16,10 @@ class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/plane12alpha.png").convert()
+        self.image = pygame.image.load("res/plane12alpha.png").convert_alpha()
         self.image = pygame.transform.rotate(self.image, 270)
         self.rect = self.image.get_rect()
-        self.rect.center = (WIDTH/2, HEIGHT/2)
+        self.rect.y = HEIGHT/2
         
     def update(self):
         if self.rect.bottom < 0:
@@ -64,9 +64,11 @@ all_sprites = pygame.sprite.Group()
 menuCursor = MenuCursor() 
 startButton = MenuButton(HEIGHT/2, "res/startText.png")
 endButton = MenuButton(HEIGHT/2+80, "res/endText.png")
+
 all_sprites.add(menuCursor)
 all_sprites.add(startButton)
 all_sprites.add(endButton)
+
 
 #Game loop
 running = True
@@ -135,7 +137,6 @@ while running:
                     keyS = False
                 if event.key == pygame.K_d:
                     keyD = False
-        
         if keyW:
             player.rect.y -= 15
         if keyA:
