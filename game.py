@@ -2,6 +2,7 @@ import pygame
 import random
 import MenuEntities
 import Player
+import array
 
 WIDTH = 1600
 HEIGHT = 900
@@ -29,7 +30,7 @@ endButton = MenuEntities.MenuButton(HEIGHT/2+80, "res/endText.png")
 all_sprites.add(menuCursor)
 all_sprites.add(startButton)
 all_sprites.add(endButton)
-prevCursorPos = []
+prevCursorPos = [Player.Vector2f(750, 750)]
 
 
 #Game loop
@@ -78,21 +79,21 @@ while running:
                 game = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
-                    cursor.rect.y -= 100
+                    cursor.pos.y -= 100
                 elif event.key == pygame.K_a:
-                    cursor.rect.x -= 100
+                    cursor.pos.x -= 100
                 elif event.key == pygame.K_s:
-                    cursor.rect.y += 100
+                    cursor.pos.y += 100
                 elif event.key == pygame.K_d:
-                    cursor.rect.x += 100
+                    cursor.pos.x += 100
                 elif event.key == pygame.K_SPACE:
-                    prevCursorPos.append(cursor.pos)
-
+                    print("SPACEBAR:", prevCursorPos)
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
-
-        
+        if (cursor.pos.x != prevCursorPos[len(prevCursorPos) - 1].x):
+            prevCursorPos.append(cursor.pos)
+        print(len(prevCursorPos))
         all_sprites.update()       
         screen.fill(BLACK)
         boardImage = pygame.image.load("res/chessBoard.png")

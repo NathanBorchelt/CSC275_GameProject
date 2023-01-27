@@ -4,13 +4,13 @@ WIDTH = 1600
 
 class Vector2f():
     def __init__(self, p_x, p_y):
-        x = p_x
-        y = p_y
+        self.x = p_x
+        self.y = p_y
 
 class Player(pygame.sprite.Sprite):
     #sprite for the Player
-    pos = Vector2f(0, 0)
     def __init__(self):
+        self.pos = Vector2f(750, 750)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/playerSprite.png").convert_alpha()
         self.rect = self.image.get_rect()
@@ -26,14 +26,14 @@ class Player(pygame.sprite.Sprite):
         if self.rect.centerx < 450:
             self.rect.centerx = 450
         
-        self.pos.x = self.rect.centerx
-        self.pos.y = self.rect.centery
+        self.rect.centerx = self.pos.x
+        self.rect.centery = self.pos.y
 
 class Cursor(pygame.sprite.Sprite):
     #sprite for the Player
-    pos = Vector2f(0, 0)
+    
     def __init__(self):
-        
+        self.pos = Vector2f(750, 750)
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/cursor.png").convert_alpha()
         self.rect = self.image.get_rect()
@@ -49,5 +49,5 @@ class Cursor(pygame.sprite.Sprite):
         if self.rect.centerx < 450:
             self.rect.centerx = 450
         
-        self.pos.x = self.rect.centerx
-        self.pos.y = self.rect.centery
+        self.rect.centerx = self.pos.x
+        self.rect.centery = self.pos.y
