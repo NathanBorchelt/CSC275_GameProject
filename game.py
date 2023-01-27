@@ -37,6 +37,9 @@ prevCursorPos = [Player.Vector2f(750, 750)]
 running = True
 game = False
 menu = True
+follow = False
+deleteEnd = False
+x = 0
 
 while running:
     while menu:
@@ -85,15 +88,34 @@ while running:
                 elif event.key == pygame.K_s:
                     cursor.pos.y += 100
                 elif event.key == pygame.K_d:
-                    cursor.pos.x += 100
+                    cursor.pos.x += 100 
                 elif event.key == pygame.K_SPACE:
-                    print("SPACEBAR:", prevCursorPos)
+                    follow = True
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
-        if (cursor.pos.x != prevCursorPos[len(prevCursorPos) - 1].x):
-            prevCursorPos.append(cursor.pos)
-        print(len(prevCursorPos))
+        if len(prevCursorPos) == 0:
+            posx = cursor.pos.x
+            posy = cursor.pos.y
+            prevCursorPos.append(Player.Vector2f(posx, posy))
+            follow = False
+        if (cursor.pos.x != prevCursorPos[len(prevCursorPos) - 1].x or cursor.pos.y != prevCursorPos[len(prevCursorPos) - 1].y):
+            posx = cursor.pos.x
+            posy = cursor.pos.y
+            prevCursorPos.append(Player.Vector2f(posx, posy))
+            x = len(prevCursorPos)
+            for i in prevCursorPos:
+                if prevCursorPos[len(prevCursorPos) - 1].x == i.x and prevCursorPos[len(prevCursorPos) - 1].y == i.y:
+                    x = prevCursorPos.index(i)+1
+                    deleteEnd = True
+            if deleteEnd:
+                while x < len(prevCursorPos):
+                    prevCursorPos.pop()
+                deleteEnd = False
+        print(x)
+        if follow:
+            player.setPos(prevCursorPos[0])
+            del prevCursorPos[0]
         all_sprites.update()       
         screen.fill(BLACK)
         boardImage = pygame.image.load("res/chessBoard.png")
