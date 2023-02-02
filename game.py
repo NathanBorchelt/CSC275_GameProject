@@ -108,6 +108,7 @@ while running:
                 if prevCursorPos[len(prevCursorPos) - 1].x == i.x and prevCursorPos[len(prevCursorPos) - 1].y == i.y:
                     x = prevCursorPos.index(i)+1
                     deleteEnd = True
+                    break
             if deleteEnd:
                 while x < len(prevCursorPos):
                     prevCursorPos.pop()
