@@ -39,6 +39,7 @@ game = False
 menu = True
 follow = False
 deleteEnd = False
+limitor = 200
 x = 0
 
 while running:
@@ -91,6 +92,11 @@ while running:
                     cursor.pos.x += 100 
                 elif event.key == pygame.K_SPACE:
                     follow = True
+                elif event.key == pygame.K_RIGHT:
+                    limitor += 100
+                    print("hi")
+                elif event.key == pygame.K_LEFT:
+                    limitor -= 100
                 elif event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
@@ -101,6 +107,8 @@ while running:
             posy = cursor.pos.y
             prevCursorPos.append(Player.Vector2f(posx, posy))
             follow = False
+        if math.sqrt(pow(cursor.pos.x - prevCursorPos[0].x, 2) + pow(cursor.pos.y - prevCursorPos[0].y, 2)) > limitor:
+            cursor.setPos(prevCursorPos[len(prevCursorPos) - 1])
         #if current position is different than the last position, it will append the new position to the list
         if (cursor.pos.x != prevCursorPos[len(prevCursorPos) - 1].x or cursor.pos.y != prevCursorPos[len(prevCursorPos) - 1].y):
             posx = cursor.pos.x

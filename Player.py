@@ -56,3 +56,7 @@ class Cursor(pygame.sprite.Sprite):
         
         self.rect.centerx = self.pos.x
         self.rect.centery = self.pos.y
+    
+    def setPos(self, p_vector):
+        self.pos.x = p_vector.x
+        self.pos.y = p_vector.y
