@@ -8,13 +8,13 @@ WIDTH = 1600
 HEIGHT = 900
 FPS = 30
 #define colors
-WHITE = (255,255,255)
-BLACK = (0,0,0)
+WHITE = (220,220,220)
+BLACK = (30,30,30)
 RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 
-        
+
 # initialize pygame and create window
 pygame.init()
 pygame.mixer.init()
@@ -23,7 +23,7 @@ pygame.display.set_caption("My Game")
 clock = pygame.time.Clock()
 #create sprite group and add the player sprite to it
 all_sprites = pygame.sprite.Group()
-menuCursor = MenuEntities.MenuCursor() 
+menuCursor = MenuEntities.MenuCursor()
 startButton = MenuEntities.MenuButton(HEIGHT/2, "res/startText.png")
 endButton = MenuEntities.MenuButton(HEIGHT/2+80, "res/endText.png")
 
@@ -69,8 +69,8 @@ while running:
                         running = False
                         menu = False
         screen.fill(BLACK)
-        all_sprites.update()       
-       
+        all_sprites.update()
+
         all_sprites.draw(screen)
         pygame.display.flip()
     while game:
@@ -88,7 +88,7 @@ while running:
                 elif event.key == pygame.K_s:
                     cursor.pos.y += 100
                 elif event.key == pygame.K_d:
-                    cursor.pos.x += 100 
+                    cursor.pos.x += 100
                 elif event.key == pygame.K_SPACE:
                     follow = True
                 elif event.key == pygame.K_ESCAPE:
@@ -116,11 +116,11 @@ while running:
         if follow:
             player.setPos(prevCursorPos[0])
             del prevCursorPos[0]
-        all_sprites.update()       
+        all_sprites.update()
         screen.fill(BLACK)
         boardImage = pygame.image.load("res/chessBoard.png")
         boardImage = pygame.transform.scale(boardImage, (800,800))
         screen.blit(boardImage, (400, 0))
         all_sprites.draw(screen)
         pygame.display.flip()
-pygame.quit() 
+pygame.quit()

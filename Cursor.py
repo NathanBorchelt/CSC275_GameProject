@@ -8,7 +8,7 @@ class Cursor(pygame.sprite.Sprite):
         self.image = pygame.image.load("res/cursor.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.center = (750,750)
-        
+
     def update(self):
         if self.rect.centery > 750:
             self.rect.centery = 750
