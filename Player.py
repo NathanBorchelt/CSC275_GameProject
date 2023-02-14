@@ -9,6 +9,9 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load("res/jet.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.top = 700
+        self.vel = 0
+        self.acc = 0
+        
         
     def update(self):
         self.rect.centerx = 350

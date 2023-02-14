@@ -48,8 +48,17 @@ while running:
                     startTime = time.time()
         
         if keyDownSpace:
-
-            player.rect.y -= 15
+            player.acc = 1
+        else:
+            player.acc = -1
+        player.vel += player.acc 
+        player.rect.y -= player.vel
+        if player.rect.bottom > 900:
+            player.rect.bottom = 900
+            player.vel = 0
+        if player.rect.top < 0:
+            player.rect.top = 0
+            player.vel = 0
 
         all_sprites.update()       
         screen.fill(BLACK)
