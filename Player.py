@@ -15,3 +15,10 @@ class Player(pygame.sprite.Sprite):
         
     def update(self):
         self.rect.centerx = 350
+class Ground(pygame.sprite.Sprite):
+    def __init__(self, p_x):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/tempG.png")
+        self.rect = self.image.get_rect()
+        self.rect.bottom = 900
+        self.rect.left = p_x
