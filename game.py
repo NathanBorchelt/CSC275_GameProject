@@ -78,12 +78,12 @@ while running:
             player.rect.top = 0
             player.vel = 0
 
-        if counter >= 40:
+        if counter >= 20:
             for i in ground_sprites:
                 i.rect.x += 400
                 counter = 0
         for i in ground_sprites:
-            i.rect.x -= 10
+            i.rect.x -= 20
         counter += 1
         print(counter)
         all_sprites.update()       
