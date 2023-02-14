@@ -39,7 +39,7 @@ game = False
 menu = True
 follow = False
 deleteEnd = False
-limitor = 200
+limitor = 150
 x = 0
 
 while running:
@@ -102,42 +102,10 @@ while running:
                     game = False
 
         #prevents list from being 0 and stops the player follow loop
-        if len(prevCursorPos) == 0:
-            posx = cursor.pos.x
-            posy = cursor.pos.y
-            prevCursorPos.append(Player.Vector2f(posx, posy))
-            follow = False
-        if math.sqrt(pow(cursor.pos.x - prevCursorPos[0].x, 2) + pow(cursor.pos.y - prevCursorPos[0].y, 2)) > limitor:
-            cursor.setPos(prevCursorPos[len(prevCursorPos) - 1])
-        #if current position is different than the last position, it will append the new position to the list
-        if (cursor.pos.x != prevCursorPos[len(prevCursorPos) - 1].x or cursor.pos.y != prevCursorPos[len(prevCursorPos) - 1].y):
-            posx = cursor.pos.x
-            posy = cursor.pos.y
-            prevCursorPos.append(Player.Vector2f(posx, posy))
-            x = len(prevCursorPos)
-            #tests each position in the list to determine if it is equal to any other index on the list
-            #if it is then it will delete all of the indexes after it
-            for i in prevCursorPos:
-                if prevCursorPos[len(prevCursorPos) - 1].x == i.x and prevCursorPos[len(prevCursorPos) - 1].y == i.y:
-                    x = prevCursorPos.index(i)+1
-                    deleteEnd = True
-                    break
-            if deleteEnd:
-                while x < len(prevCursorPos):
-                    prevCursorPos.pop()
-                deleteEnd = False
-        #follow is the just the loop for following the coordinates in the array
-        if follow:
-            player.setPos(prevCursorPos[0])
-            del prevCursorPos[0]
-
+        
 
         all_sprites.update()       
         screen.fill(BLACK)
-        #I don't know why the hell I put this here
-        boardImage = pygame.image.load("res/chessBoard.png")
-        boardImage = pygame.transform.scale(boardImage, (800,800))
-        screen.blit(boardImage, (400, 0))
         all_sprites.draw(screen)
         pygame.display.flip()
 pygame.quit()
