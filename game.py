@@ -85,7 +85,6 @@ while running:
         for i in ground_sprites:
             i.rect.x -= 20
         counter += 1
-        print(counter)
         all_sprites.update()       
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
