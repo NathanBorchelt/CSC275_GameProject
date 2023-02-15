@@ -1,5 +1,4 @@
 import pygame
-import time
 from Player import *
 
 WIDTH = 1600
@@ -22,28 +21,31 @@ clock = pygame.time.Clock()
 #create sprite group and add the player sprite to it
 all_sprites = pygame.sprite.Group()
 ground_sprites = pygame.sprite.Group()
+obstacles = pygame.sprite.Group()
 #Game loop``
 running = True
 game = True
+keyDownSpace = False
 ground = Ground(0)
 ground1 = Ground(400)
 ground2 = Ground(800)
 ground3 = Ground(1200)
 ground4 = Ground(1600)
 player = Player()
+obj = Hazard(200)
 all_sprites.add(ground)
 all_sprites.add(ground1)
 all_sprites.add(ground2)
 all_sprites.add(ground3)
 all_sprites.add(ground4)
+all_sprites.add(obj)
 ground_sprites.add(ground)
 ground_sprites.add(ground1)
 ground_sprites.add(ground2)
 ground_sprites.add(ground3)
 ground_sprites.add(ground4)
 all_sprites.add(player)
-keyDownSpace = False
-startTime = time.time()
+obstacles.add(obj)
 counter = 0
 
 while running:
@@ -62,9 +64,7 @@ while running:
                     game = False
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    keyDownSpace = False
-                    startTime = time.time()
-        
+                    keyDownSpace = False       
         if keyDownSpace:
             player.acc = 1
         else:
@@ -77,13 +77,17 @@ while running:
         if player.rect.top < 0:
             player.rect.top = 0
             player.vel = 0
-
-        if counter >= 20:
+        for i in obstacles:
+            if pygame.sprite.collide_rect(player, i):
+                running = False
+                game = False
+                print("LOSER!")
+        if counter >= 40:
             for i in ground_sprites:
                 i.rect.x += 400
                 counter = 0
         for i in ground_sprites:
-            i.rect.x -= 20
+            i.rect.x -= 10
         counter += 1
         all_sprites.update()       
         screen.fill((128, 186, 184))
