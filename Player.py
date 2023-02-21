@@ -12,6 +12,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.top = 700
         self.vel = 0
         self.acc = 0
+    def changeImage(self, p_tex):
+        self.image = pygame.image.load(p_tex)
         
         
     def update(self):
@@ -19,7 +21,7 @@ class Player(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self, p_x):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/tempG.png")
+        self.image = pygame.image.load("res/tempG.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.bottom = 900
         self.rect.left = p_x
@@ -33,8 +35,9 @@ class Hazard(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.left = 1600
         self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
+        self.speed = 20
     def update(self):
-        self.rect.x -= 10
+        self.rect.x -= self.speed
         if self.rect.right < 0:
             self.rect.left = 1600
-            self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
+            self.rect.centery = randint(0 + self.height/2, 700 - self.height/2)

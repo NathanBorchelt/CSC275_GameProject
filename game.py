@@ -4,6 +4,8 @@ from Player import *
 WIDTH = 1600
 HEIGHT = 900
 FPS = 60
+SPEED = 10
+PLAYER_ACC = 1
 #define colors
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -59,16 +61,24 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = True
-                elif event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
+                if event.key == pygame.K_RIGHT:
+                    for i in obstacles:
+                        i.speed += 1
+                if event.key == pygame.K_LEFT:
+                    for i in obstacles:
+                        i.speed -=1
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = False       
         if keyDownSpace:
-            player.acc = 1
+            player.acc = PLAYER_ACC
+            player.changeImage("res/jetOn.png")
         else:
-            player.acc = -1
+            player.changeImage("res/jet.png")
+            player.acc = -PLAYER_ACC
         player.vel += player.acc 
         player.rect.y -= player.vel
         if player.rect.bottom > 750:
@@ -82,12 +92,12 @@ while running:
                 running = False
                 game = False
                 print("LOSER!")
-        if counter >= 40:
+        if counter >= 20:
             for i in ground_sprites:
                 i.rect.x += 400
                 counter = 0
         for i in ground_sprites:
-            i.rect.x -= 10
+            i.rect.x -= 20
         counter += 1
         all_sprites.update()       
         screen.fill((128, 186, 184))
