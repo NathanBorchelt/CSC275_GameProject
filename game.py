@@ -1,5 +1,6 @@
 import pygame
 import pickle
+import time
 from Player import *
         
 # initialize pygame and create window
@@ -36,11 +37,25 @@ ground_sprites.add(ground3)
 ground_sprites.add(ground4)
 all_sprites.add(player)
 obstacles.add(obj)
+startTime = time.time()
 counter = 0
-counter2 = 0
 
 while running:
     while game:
+        print(st.playerSpeed)
+        timeSinceStart = time.time() - startTime
+        if timeSinceStart > 1 and counter == 0:
+            st.playerSpeed += 4
+            counter += 1
+        if timeSinceStart > 2 and counter == 1:
+            st.playerSpeed += 4
+            counter += 1
+        if timeSinceStart > 3 and counter == 2:
+            st.playerSpeed += 4
+            counter += 1
+        if timeSinceStart > 4 and counter == 3:
+            st.playerSpeed += 4
+            counter += 1
         clock.tick(st.FPS)
         for event in pygame.event.get():
             # check for closing window
@@ -54,9 +69,9 @@ while running:
                     running = False
                     game = False
                 if event.key == pygame.K_RIGHT:
-                    counter2 += 1
+                    st.playerSpeed += 4
                 if event.key == pygame.K_LEFT:
-                    counter2 -=1
+                    st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = False       
@@ -78,21 +93,17 @@ while running:
             if pygame.sprite.collide_rect(player, i):
                 running = False
                 game = False
-                print("LOSER!")
-        if counter >= 400.0/st.playerSpeed+.01:
+        if ground.startPos - ground.rect.x >= 400.0:
             ground.rect.x = ground.startPos 
             ground1.rect.x = ground1.startPos 
             ground2.rect.x = ground2.startPos 
             ground3.rect.x = ground3.startPos 
             ground4.rect.x = ground4.startPos 
-            counter = 0
-            st.playerSpeed += counter2
-            counter2 = 0
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
-        counter += 1
         all_sprites.update()       
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
         pygame.display.flip()
+    print("Loser!")
 pygame.quit()

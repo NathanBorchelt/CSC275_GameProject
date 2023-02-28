@@ -1,6 +1,6 @@
 WIDTH = 1600
 HEIGHT = 900
-FPS = 120
+FPS = 60
 SPEED = 10
 PLAYER_ACC = 1
 #define colors
@@ -9,4 +9,5 @@ BLACK = (0,0,0)
 RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
-playerSpeed = 10.0
+
+playerSpeed = 4.0
