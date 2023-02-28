@@ -1,23 +1,11 @@
 import pygame
+import pickle
 from Player import *
-
-WIDTH = 1600
-HEIGHT = 900
-FPS = 60
-SPEED = 10
-PLAYER_ACC = 1
-#define colors
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-
         
 # initialize pygame and create window
 pygame.init()
 pygame.mixer.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((st.WIDTH, st.HEIGHT))
 pygame.display.set_caption("Joypack Jetride")
 clock = pygame.time.Clock()
 #create sprite group and add the player sprite to it
@@ -49,10 +37,11 @@ ground_sprites.add(ground4)
 all_sprites.add(player)
 obstacles.add(obj)
 counter = 0
+counter2 = 0
 
 while running:
     while game:
-        clock.tick(FPS)
+        clock.tick(st.FPS)
         for event in pygame.event.get():
             # check for closing window
             if event.type == pygame.QUIT:
@@ -65,20 +54,18 @@ while running:
                     running = False
                     game = False
                 if event.key == pygame.K_RIGHT:
-                    for i in obstacles:
-                        i.speed += 1
+                    counter2 += 1
                 if event.key == pygame.K_LEFT:
-                    for i in obstacles:
-                        i.speed -=1
+                    counter2 -=1
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = False       
         if keyDownSpace:
-            player.acc = PLAYER_ACC
+            player.acc = st.PLAYER_ACC
             player.changeImage("res/jetOn.png")
         else:
             player.changeImage("res/jet.png")
-            player.acc = -PLAYER_ACC
+            player.acc = -st.PLAYER_ACC
         player.vel += player.acc 
         player.rect.y -= player.vel
         if player.rect.bottom > 750:
@@ -92,12 +79,17 @@ while running:
                 running = False
                 game = False
                 print("LOSER!")
-        if counter >= 20:
-            for i in ground_sprites:
-                i.rect.x += 400
-                counter = 0
+        if counter >= 400.0/st.playerSpeed+.01:
+            ground.rect.x = ground.startPos 
+            ground1.rect.x = ground1.startPos 
+            ground2.rect.x = ground2.startPos 
+            ground3.rect.x = ground3.startPos 
+            ground4.rect.x = ground4.startPos 
+            counter = 0
+            st.playerSpeed += counter2
+            counter2 = 0
         for i in ground_sprites:
-            i.rect.x -= 20
+            i.rect.x -= st.playerSpeed
         counter += 1
         all_sprites.update()       
         screen.fill((128, 186, 184))

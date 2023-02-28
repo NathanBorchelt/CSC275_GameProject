@@ -1,5 +1,6 @@
 import pygame
 from random import *
+import settings as st
 HEIGHT = 900
 WIDTH = 1600
 
@@ -25,6 +26,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = 900
         self.rect.left = p_x
+        self.startPos = p_x
 
 class Hazard(pygame.sprite.Sprite):
     def __init__(self, p_height):
@@ -37,7 +39,7 @@ class Hazard(pygame.sprite.Sprite):
         self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
         self.speed = 20
     def update(self):
-        self.rect.x -= self.speed
+        self.rect.x -= st.playerSpeed
         if self.rect.right < 0:
             self.rect.left = 1600
             self.rect.centery = randint(0 + self.height/2, 700 - self.height/2)
