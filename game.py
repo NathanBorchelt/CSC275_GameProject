@@ -23,26 +23,28 @@ ground2 = Ground(800)
 ground3 = Ground(1200)
 ground4 = Ground(1600)
 player = Player()
-obj = Hazard(200)
+haz = Hazard(200, True,0,randint(0,3))
 all_sprites.add(ground)
 all_sprites.add(ground1)
 all_sprites.add(ground2)
 all_sprites.add(ground3)
 all_sprites.add(ground4)
-all_sprites.add(obj)
+all_sprites.add(haz)
 ground_sprites.add(ground)
 ground_sprites.add(ground1)
 ground_sprites.add(ground2)
 ground_sprites.add(ground3)
 ground_sprites.add(ground4)
 all_sprites.add(player)
-obstacles.add(obj)
+obstacles.add(haz)
 startTime = time.time()
 counter = 0
+font = pygame.font.Font('Streetwear.otf', 30)
+score = 0
+
 
 while running:
     while game:
-        print(st.playerSpeed)
         timeSinceStart = time.time() - startTime
         if timeSinceStart > 1 and counter == 0:
             st.playerSpeed += 4
@@ -75,6 +77,7 @@ while running:
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = False       
+
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
             player.changeImage("res/jetOn.png")
@@ -83,16 +86,28 @@ while running:
             player.acc = -st.PLAYER_ACC
         player.vel += player.acc 
         player.rect.y -= player.vel
+
         if player.rect.bottom > 750:
             player.rect.bottom = 750
             player.vel = 0
         if player.rect.top < 0:
             player.rect.top = 0
             player.vel = 0
+
         for i in obstacles:
-            if pygame.sprite.collide_rect(player, i):
+            if pygame.sprite.collide_mask(player, i):
                 running = False
                 game = False
+            if abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10 and i.mother:
+                i.mother = False
+                haz2 = Hazard(randint(75, 125)*2, True, 0, randint(0,3))
+                obstacles.add(haz2)
+                all_sprites.add(haz2)
+                if (bool(randint(0,1))):    
+                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(WIDTH/4 )*2), randint(0, 3))   
+                    obstacles.add(haz3)
+                    all_sprites.add(haz3)  
+
         if ground.startPos - ground.rect.x >= 400.0:
             ground.rect.x = ground.startPos 
             ground1.rect.x = ground1.startPos 
@@ -101,9 +116,12 @@ while running:
             ground4.rect.x = ground4.startPos 
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
+        
+        text_surface = font.render(str(int(score/300)), True, (0,0,0))
+        score += st.playerSpeed
         all_sprites.update()       
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
+        screen.blit(text_surface, (50, 50))
         pygame.display.flip()
-    print("Loser!")
 pygame.quit()
