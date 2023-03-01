@@ -12,10 +12,20 @@ class Player(pygame.sprite.Sprite):
         self.rect.top = 700
         self.vel = 0
         self.acc = 0
-        
-        
+        self.speed = 2
+        self.score = 0
+
+
     def update(self):
         self.rect.centerx = 350
+
+    def speedUpdate(self,factor):
+        #exponential speed increase
+        maxSpeed=50
+        if(self.speed < maxSpeed):
+            self.speed = round(self.speed ** factor,3)
+        else:
+            self.speed = maxSpeed
 class Ground(pygame.sprite.Sprite):
     def __init__(self, p_x):
         pygame.sprite.Sprite.__init__(self)
@@ -23,6 +33,7 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.bottom = 900
         self.rect.left = p_x
+        self.startPos = p_x
 
 class Hazard(pygame.sprite.Sprite):
     def __init__(self, p_height):
@@ -34,7 +45,6 @@ class Hazard(pygame.sprite.Sprite):
         self.rect.left = 1600
         self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
     def update(self):
-        self.rect.x -= 10
         if self.rect.right < 0:
             self.rect.left = 1600
             self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)

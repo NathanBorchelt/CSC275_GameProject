@@ -11,7 +11,7 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 
-        
+
 # initialize pygame and create window
 pygame.init()
 pygame.mixer.init()
@@ -64,12 +64,12 @@ while running:
                     game = False
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-                    keyDownSpace = False       
+                    keyDownSpace = False
         if keyDownSpace:
             player.acc = 1
         else:
             player.acc = -1
-        player.vel += player.acc 
+        player.vel += player.acc
         player.rect.y -= player.vel
         if player.rect.bottom > 750:
             player.rect.bottom = 750
@@ -82,14 +82,24 @@ while running:
                 running = False
                 game = False
                 print("LOSER!")
-        if counter >= 40:
+                print(player.score)
+        if counter >= round(400/player.speed):
             for i in ground_sprites:
                 i.rect.x += 400
                 counter = 0
+                player.speedUpdate(1.01)
+                print(player.speed)
+                ground.rect.x = ground.startPos
+                ground1.rect.x = ground1.startPos
+                ground2.rect.x = ground2.startPos
+                ground3.rect.x = ground3.startPos
+                ground4.rect.x = ground4.startPos
         for i in ground_sprites:
-            i.rect.x -= 10
+            i.rect.x -= player.speed
+        obj.rect.x -= player.speed
         counter += 1
-        all_sprites.update()       
+        player.score += round(player.speed)
+        all_sprites.update()
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
         pygame.display.flip()
