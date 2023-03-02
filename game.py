@@ -39,7 +39,7 @@ all_sprites.add(player)
 obstacles.add(haz)
 startTime = time.time()
 counter = 0
-font = pygame.font.Font('Streetwear.otf', 30)
+font = pygame.font.Font('res/New Athletic M54.ttf', 36)
 score = 0
 
 
@@ -117,11 +117,11 @@ while running:
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
         
-        text_surface = font.render(str(int(score/300)), True, (0,0,0))
+        text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
         score += st.playerSpeed
         all_sprites.update()       
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
-        screen.blit(text_surface, (50, 50))
+        screen.blit(text_surface, (25, 25))
         pygame.display.flip()
 pygame.quit()
