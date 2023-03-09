@@ -13,17 +13,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.top = 700
         self.vel = 0
         self.acc = 0
-<<<<<<< HEAD
-        self.speed = 2
-        self.score = 0
-
-
-=======
     def changeImage(self, p_tex):
         self.image = pygame.image.load(p_tex)
         
         
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
     def update(self):
         self.rect.centerx = 350
 
@@ -72,13 +65,7 @@ class Hazard(pygame.sprite.Sprite):
         self.rect.centery = randint(0 + self.height/2, HEIGHT - self.height/2-150)
 
     def update(self):
-<<<<<<< HEAD
-        if self.rect.right < 0:
-            self.rect.left = 1600
-            self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
-=======
         self.rect.x -= st.playerSpeed
         if self.rect.right < 0:
             self.kill()
         
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc

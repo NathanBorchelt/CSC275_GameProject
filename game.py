@@ -2,22 +2,7 @@ import pygame
 import pickle
 import time
 from Player import *
-<<<<<<< HEAD
-
-WIDTH = 1600
-HEIGHT = 900
-FPS = 60
-#define colors
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-
-
-=======
         
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
 # initialize pygame and create window
 pygame.init()
 pygame.mixer.init()
@@ -91,24 +76,15 @@ while running:
                     st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-<<<<<<< HEAD
-                    keyDownSpace = False
-=======
                     keyDownSpace = False       
 
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
             player.changeImage("res/jetOn.png")
         else:
-<<<<<<< HEAD
-            player.acc = -1
-        player.vel += player.acc
-=======
             player.changeImage("res/jet.png")
             player.acc = -st.PLAYER_ACC
         player.vel += player.acc 
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
         player.rect.y -= player.vel
 
         if player.rect.bottom > 750:
@@ -147,7 +123,6 @@ while running:
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
         score += st.playerSpeed
         all_sprites.update()       
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
         screen.blit(text_surface, (25, 25))
