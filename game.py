@@ -98,7 +98,9 @@ while running:
             if pygame.sprite.collide_mask(player, i):
                 running = False
                 game = False
-            if abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10 and i.mother:
+
+            spawnPlatform = abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10
+            if spawnPlatform and i.mother:
                 i.mother = False
                 haz2 = Hazard(randint(75, 125)*2, True, 0, randint(0,3))
                 obstacles.add(haz2)
@@ -108,7 +110,8 @@ while running:
                     obstacles.add(haz3)
                     all_sprites.add(haz3)  
 
-        if ground.startPos - ground.rect.x >= 400.0:
+        resetGround = ground.startPos - ground.rect.x >= 400
+        if resetGround:
             ground.rect.x = ground.startPos 
             ground1.rect.x = ground1.startPos 
             ground2.rect.x = ground2.startPos 
