@@ -1,8 +1,6 @@
 import pygame
 from random import *
 import settings as st
-HEIGHT = 900
-WIDTH = 1600
 
 class Player(pygame.sprite.Sprite):
     #sprite for the Player
@@ -10,20 +8,17 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/jet.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.top = 700
+        self.rect.top = st.HEIGHT*.7
         self.vel = 0
         self.acc = 0
-<<<<<<< HEAD
         self.speed = 2
         self.score = 0
 
 
-=======
     def changeImage(self, p_tex):
         self.image = pygame.image.load(p_tex)
-        
-        
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
+
+
     def update(self):
         self.rect.centerx = 350
 
@@ -39,7 +34,7 @@ class Ground(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/tempG.png").convert_alpha()
         self.rect = self.image.get_rect()
-        self.rect.bottom = 900
+        self.rect.bottom = st.HEIGHT
         self.rect.left = p_x
         self.startPos = p_x
 
@@ -52,8 +47,8 @@ class Hazard(pygame.sprite.Sprite):
         #self.image = pygame.Surface((50, self.height))
         self.image = pygame.image.load("res/lazer.png").convert_alpha()
         self.image = pygame.transform.scale(self.image,(50, height))
-        
-        #if type == 0:            
+
+        #if type == 0:
             #self.image.fill((170, 0, 0))
 
         if type == 1:
@@ -68,17 +63,13 @@ class Hazard(pygame.sprite.Sprite):
             #self.image.fill((0, 0, 170))
             self.image = pygame.transform.rotate(self.image, 90)
         self.rect = self.image.get_rect()
-        self.rect.left = WIDTH + offset
-        self.rect.centery = randint(0 + self.height/2, HEIGHT - self.height/2-150)
+        self.rect.left = st.WIDTH + offset
+        self.rect.centery = randint(0 + self.height/2, st.HEIGHT - self.height/2-150)
 
     def update(self):
-<<<<<<< HEAD
         if self.rect.right < 0:
             self.rect.left = 1600
             self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
-=======
         self.rect.x -= st.playerSpeed
         if self.rect.right < 0:
             self.kill()
-        
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc

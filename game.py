@@ -2,7 +2,6 @@ import pygame
 import pickle
 import time
 from Player import *
-<<<<<<< HEAD
 
 WIDTH = 1600
 HEIGHT = 900
@@ -15,9 +14,7 @@ GREEN = (0,255,0)
 BLUE = (0,0,255)
 
 
-=======
-        
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
+
 # initialize pygame and create window
 pygame.init()
 pygame.mixer.init()
@@ -91,24 +88,16 @@ while running:
                     st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
-<<<<<<< HEAD
                     keyDownSpace = False
-=======
-                    keyDownSpace = False       
 
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
+
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
             player.changeImage("res/jetOn.png")
         else:
-<<<<<<< HEAD
-            player.acc = -1
-        player.vel += player.acc
-=======
             player.changeImage("res/jet.png")
             player.acc = -st.PLAYER_ACC
-        player.vel += player.acc 
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
+        player.vel += player.acc
         player.rect.y -= player.vel
 
         if player.rect.bottom > 750:
@@ -122,50 +111,28 @@ while running:
             if pygame.sprite.collide_mask(player, i):
                 running = False
                 game = False
-<<<<<<< HEAD
-                print("LOSER!")
-                print(player.score)
-        if counter >= round(400/player.speed):
-            for i in ground_sprites:
-                i.rect.x += 400
-                counter = 0
-                player.speedUpdate(1.01)
-                print(player.speed)
-                ground.rect.x = ground.startPos
-                ground1.rect.x = ground1.startPos
-                ground2.rect.x = ground2.startPos
-                ground3.rect.x = ground3.startPos
-                ground4.rect.x = ground4.startPos
-        for i in ground_sprites:
-            i.rect.x -= player.speed
-        obj.rect.x -= player.speed
-        counter += 1
-        player.score += round(player.speed)
-        all_sprites.update()
-=======
             if abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10 and i.mother:
                 i.mother = False
                 haz2 = Hazard(randint(75, 125)*2, True, 0, randint(0,3))
                 obstacles.add(haz2)
                 all_sprites.add(haz2)
-                if (bool(randint(0,1))):    
-                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(WIDTH/4 )*2), randint(0, 3))   
+                if (bool(randint(0,1))):
+                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(WIDTH/4 )*2), randint(0, 3))
                     obstacles.add(haz3)
-                    all_sprites.add(haz3)  
+                    all_sprites.add(haz3)
 
         if ground.startPos - ground.rect.x >= 400.0:
-            ground.rect.x = ground.startPos 
-            ground1.rect.x = ground1.startPos 
-            ground2.rect.x = ground2.startPos 
-            ground3.rect.x = ground3.startPos 
-            ground4.rect.x = ground4.startPos 
+            ground.rect.x = ground.startPos
+            ground1.rect.x = ground1.startPos
+            ground2.rect.x = ground2.startPos
+            ground3.rect.x = ground3.startPos
+            ground4.rect.x = ground4.startPos
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
-        
+
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
         score += st.playerSpeed
-        all_sprites.update()       
->>>>>>> 62e5c09181ea809694a2592ddd1ae0df530bc7fc
+        all_sprites.update()
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
         screen.blit(text_surface, (25, 25))
