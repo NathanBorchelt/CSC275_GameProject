@@ -106,7 +106,7 @@ while running:
             player.vel = 0
 
         for warning in warnings:
-            warning.rect.y += (player.rect.y - warning.rect.y)/5
+            warning.rect.y += (player.rect.y - warning.rect.y)/100
         if time.time() - missleStartTime > missleInterval:
             missleStartTime = time.time()
             missleInterval = randint(3, 7)
