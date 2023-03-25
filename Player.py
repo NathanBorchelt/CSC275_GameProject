@@ -1,6 +1,7 @@
 import pygame
 from random import *
 import settings as st
+import time
 HEIGHT = 900
 WIDTH = 1600
 
@@ -68,4 +69,27 @@ class Hazard(pygame.sprite.Sprite):
         self.rect.x -= st.playerSpeed
         if self.rect.right < 0:
             self.kill()
-        
+
+class MissleWarning(pygame.sprite.Sprite):
+    def __init__(self, p_y):      
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/missleWarning.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH - self.rect.width
+        self.rect.y = p_y
+        self.spawnTime = time.time()
+        self.spawn = 0
+    def update(self):
+        self.spawn = time.time() - self.spawnTime
+
+class Missle(pygame.sprite.Sprite):
+    def __init__(self, p_y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/missle.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = WIDTH + self.rect.width
+        self.rect.y = p_y
+    def update(self):
+        if self.rect.right < 0:
+            self.kill()
+        self.rect.x -= st.playerSpeed + 15
