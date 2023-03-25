@@ -157,10 +157,12 @@ while running:
             i.rect.x -= st.playerSpeed
         
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
+        highscore_surface = font.render("Highscore - " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
         all_sprites.update()       
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
         screen.blit(text_surface, (25, 25))
+        screen.blit(highscore_surface, (25, 75))
         pygame.display.flip()
 pygame.quit()
