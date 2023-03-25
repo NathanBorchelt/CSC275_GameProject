@@ -51,9 +51,6 @@ score = 0
 with open("highscore.txt", "r") as file:
     highscore = int(file.readline())
 
-print(highscore)
-
-
 while running:
     while game:
         timeSinceStart = time.time() - startTime
@@ -109,7 +106,7 @@ while running:
             warning.rect.y += (player.rect.y - warning.rect.y)/100
         if time.time() - missleStartTime > missleInterval:
             missleStartTime = time.time()
-            missleInterval = randint(3, 7)
+            missleInterval = randint(5, 7)
             warning = MissleWarning(randint(0, HEIGHT))
             all_sprites.add(warning)
             warnings.add(warning)
@@ -127,10 +124,11 @@ while running:
             if pygame.sprite.collide_mask(player, i):
                 running = False
                 game = False
-                if int(score/300) > highscore:
-                    with open("highscore.txt", 'w') as file:
-                        file.write(str(int(score/300)))
-                
+                with open("highscore.txt", 'w') as file:
+                        file.write(str(highscore))
+        if int(score/300) > highscore:
+            highscore = int(score/300)
+                           
 
         for i in lasers:
             spawnPlatform = abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10
@@ -157,7 +155,7 @@ while running:
             i.rect.x -= st.playerSpeed
         
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
-        highscore_surface = font.render("Highscore - " + str(highscore) + " M", True, (0, 0, 0))
+        highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
         all_sprites.update()       
         screen.fill((128, 186, 184))
