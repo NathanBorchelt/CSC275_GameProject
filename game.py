@@ -66,7 +66,7 @@ while running:
                 running = False
                 menu = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE or event.type == pygame.K_RETURN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     keyDownSpace = True
                 if event.key == pygame.K_ESCAPE:
                     running = False
@@ -76,7 +76,7 @@ while running:
                 if event.key == pygame.K_DOWN:
                     cursor.rect.y += 1.5 * startGame.get_height()
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     keyDownSpace = False  
             
         if cursor.rect.centery < st.SCREEN_HEIGHT/2:
@@ -130,7 +130,7 @@ while running:
                 if event.key == pygame.K_LEFT:
                     st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     keyDownSpace = False       
 
         if keyDownSpace:
