@@ -5,8 +5,8 @@ from Player import *
         
 # initialize pygame and create window
 pygame.init()
-pygame.mixer.init()
-screen = pygame.display.set_mode((st.WIDTH, st.HEIGHT))
+pygame.mixer.init()  
+screen = pygame.display.set_mode((st.SCREEN_WIDTH, st.SCREEN_HEIGHT))
 pygame.display.set_caption("Joypack Jetride")
 clock = pygame.time.Clock()
 #create sprite group and add the player sprite to it
@@ -18,13 +18,14 @@ warnings = pygame.sprite.Group()
 missles = pygame.sprite.Group()
 #Game loop``
 running = True
-game = True
+game = False
+menu = True
 keyDownSpace = False
 ground = Ground(0)
-ground1 = Ground(400)
-ground2 = Ground(800)
-ground3 = Ground(1200)
-ground4 = Ground(1600)
+ground1 = Ground(st.SCREEN_WIDTH/4)
+ground2 = Ground(st.SCREEN_WIDTH/2)
+ground3 = Ground(st.SCREEN_WIDTH*3/4)
+ground4 = Ground(st.SCREEN_WIDTH)
 player = Player()
 haz = Hazard(200, True,0,randint(0,3))
 all_sprites.add(ground)
@@ -49,9 +50,35 @@ font = pygame.font.Font('res/New Athletic M54.ttf', 36)
 score = 0
 
 with open("highscore.txt", "r") as file:
-    highscore = int(file.readline())
+    try:
+        highscore = int(file.readline())
+    except:
+        highscore = 0
 
 while running:
+    while menu:
+        for event in pygame.event.get():
+            # check for closing window
+            if event.type == pygame.QUIT:
+                running = False
+                menu = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.type == pygame.K_RETURN:
+                    keyDownSpace = True
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    game = False
+                if event.key == pygame.K_RIGHT:
+                    st.playerSpeed += 4
+                if event.key == pygame.K_LEFT:
+                    st.playerSpeed -= 4
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_SPACE:
+                    keyDownSpace = False  
+            
+            #if keyDownSpace:
+
+            
     while game:
         timeSinceStart = time.time() - startTime
         if timeSinceStart > 1 and timeCounter == 0:
@@ -95,19 +122,19 @@ while running:
         player.vel += player.acc 
         player.rect.y -= player.vel
 
-        if player.rect.bottom > 750:
-            player.rect.bottom = 750
+        if player.rect.bottom > st.SCREEN_HEIGHT - ground.rect.height*2/3:
+            player.rect.bottom = st.SCREEN_HEIGHT - ground.rect.height*2/3
             player.vel = 0
         if player.rect.top < 0:
             player.rect.top = 0
             player.vel = 0
 
         for warning in warnings:
-            warning.rect.y += (player.rect.y - warning.rect.y)/100
+            warning.rect.y += (player.rect.y - warning.rect.y)/60
         if time.time() - missleStartTime > missleInterval:
             missleStartTime = time.time()
             missleInterval = randint(5, 7)
-            warning = MissleWarning(randint(0, HEIGHT))
+            warning = MissleWarning(randint(0, st.SCREEN_HEIGHT))
             all_sprites.add(warning)
             warnings.add(warning)
 
@@ -139,12 +166,12 @@ while running:
                 obstacles.add(haz2)
                 all_sprites.add(haz2)
                 if (bool(randint(0,1))):    
-                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(WIDTH/4 )*2), randint(0, 3))   
+                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(st.SCREEN_WIDTH/4 )*2), randint(0, 3))   
                     lasers.add(haz3)
                     obstacles.add(haz3)
                     all_sprites.add(haz3)  
 
-        resetGround = ground.startPos - ground.rect.x >= 400
+        resetGround = ground.startPos - ground.rect.x >= ground.rect.width
         if resetGround:
             ground.rect.x = ground.startPos 
             ground1.rect.x = ground1.startPos 
