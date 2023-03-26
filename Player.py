@@ -98,3 +98,11 @@ class Missle(pygame.sprite.Sprite):
         if self.rect.right < 0:
             self.kill()
         self.rect.x -= st.playerSpeed + 15
+
+class Cursor(pygame.sprite.Sprite):
+    def __init__(self, p_x, p_y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/cursor.png").convert_alpha()
+        self.image = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        self.rect = self.image.get_rect()
+        self.rect.center = (p_x, p_y)

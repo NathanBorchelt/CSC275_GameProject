@@ -42,9 +42,6 @@ ground_sprites.add(ground4)
 all_sprites.add(player)
 obstacles.add(haz)
 lasers.add(haz)
-startTime = time.time()
-missleStartTime = time.time()
-missleInterval = randint(3, 7)
 timeCounter = 0
 font = pygame.font.Font('res/New Athletic M54.ttf', 36)
 score = 0
@@ -54,6 +51,12 @@ with open("highscore.txt", "r") as file:
         highscore = int(file.readline())
     except:
         highscore = 0
+
+startGame = pygame.image.load("res/menuFrame.png").convert_alpha()
+startGame = pygame.transform.scale_by(startGame, st.SCREEN_WIDTH/st.BASE_WIDTH)
+cursor = Cursor(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
+cursorGroup = pygame.sprite.Group()
+cursorGroup.add(cursor)
 
 while running:
     while menu:
@@ -67,18 +70,35 @@ while running:
                     keyDownSpace = True
                 if event.key == pygame.K_ESCAPE:
                     running = False
-                    game = False
-                if event.key == pygame.K_RIGHT:
-                    st.playerSpeed += 4
-                if event.key == pygame.K_LEFT:
-                    st.playerSpeed -= 4
+                    menu = False
+                if event.key == pygame.K_UP:
+                    cursor.rect.y -= 1.5 * startGame.get_height()
+                if event.key == pygame.K_DOWN:
+                    cursor.rect.y += 1.5 * startGame.get_height()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = False  
             
-            #if keyDownSpace:
+        if cursor.rect.centery < st.SCREEN_HEIGHT/2:
+            cursor.rect.centery = st.SCREEN_HEIGHT/2
+        elif cursor.rect.centery > st.SCREEN_HEIGHT/2 + 3 * startGame.get_height():
+            cursor.rect.centery = st.SCREEN_HEIGHT/2 + 3 * startGame.get_height()
 
+        if keyDownSpace:
+            if cursor.rect.centery <= st.SCREEN_HEIGHT/2:
+                menu = False
+                game = True
+                startTime = time.time()
+                missleStartTime = time.time()
+                missleInterval = randint(3, 7)
             
+        screen.fill((0, 0, 0))
+        screen.blit(startGame, (st.SCREEN_WIDTH/2 - startGame.get_width()/2, st.SCREEN_HEIGHT/2 - startGame.get_height()/2))
+        screen.blit(startGame, (st.SCREEN_WIDTH/2 - startGame.get_width()/2, st.SCREEN_HEIGHT/2 + startGame.get_height()))
+        screen.blit(startGame, (st.SCREEN_WIDTH/2 - startGame.get_width()/2, st.SCREEN_HEIGHT/2 + startGame.get_height()* 2.5))
+        cursorGroup.draw(screen)
+        pygame.display.flip()
+
     while game:
         timeSinceStart = time.time() - startTime
         if timeSinceStart > 1 and timeCounter == 0:
