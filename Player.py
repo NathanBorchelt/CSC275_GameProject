@@ -3,7 +3,6 @@ from random import *
 import settings as st
 import time
 
-
 class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
