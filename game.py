@@ -1,5 +1,4 @@
 import pygame
-import pickle
 import time
 from Player import *
         
