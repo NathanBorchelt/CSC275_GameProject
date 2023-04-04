@@ -9,16 +9,16 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/jet.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        self.jetpackImage = pygame.image.load("res/jet.png").convert_alpha()
+        self.jetpackImage = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
         self.rect = self.image.get_rect()
         self.rect.top = 700
         self.vel = 0
         self.acc = 0
-    def changeImage(self, p_tex):
-        self.image = pygame.image.load(p_tex)
         
         
     def update(self):
-        self.rect.centerx = st.SCREEN_WIDTH/6
+        self.rect.centerx = st.SCREEN_WIDTH/5
 
     def speedUpdate(self,factor):
         #exponential speed increase

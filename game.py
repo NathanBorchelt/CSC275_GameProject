@@ -44,6 +44,7 @@ lasers.add(haz)
 timeCounter = 0
 font = pygame.font.Font('res/New Athletic M54.ttf', 36)
 score = 0
+frameCounter = 0
 
 with open("highscore.txt", "r") as file:
     try:
@@ -124,6 +125,7 @@ while running:
                 if event.key == pygame.K_ESCAPE:
                     running = False
                     game = False
+                    frameCounter = 0
                 if event.key == pygame.K_RIGHT:
                     st.playerSpeed += 4
                 if event.key == pygame.K_LEFT:
@@ -134,10 +136,13 @@ while running:
 
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
-            player.changeImage("res/jetOn.png")
+            player.jetpackImage = pygame.image.load(f"res/jetpack{int(frameCounter % 30 / 10)}.png")
+            player.image = pygame.image.load("res/jet.png")
         else:
-            player.changeImage("res/jet.png")
+            player.jetpackImage = pygame.image.load("res/jetpack3.png")
+            player.image = pygame.image.load("res/missleWarning.png")
             player.acc = -st.PLAYER_ACC
+        player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.SCREEN_WIDTH/st.BASE_WIDTH)
         player.vel += player.acc 
         player.rect.y -= player.vel
 
@@ -203,10 +208,12 @@ while running:
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
         highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
-        all_sprites.update()       
+        all_sprites.update() 
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
+        screen.blit(player.jetpackImage, (player.rect.x - player.rect.width/4, player.rect.y + player.rect.height/8))
         screen.blit(text_surface, (25, 25))
         screen.blit(highscore_surface, (25, 75))
         pygame.display.flip()
+        frameCounter += 1
 pygame.quit()
