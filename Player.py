@@ -1,3 +1,4 @@
+from math import cos, radians, sin
 import pygame
 from random import *
 import settings as st
@@ -8,9 +9,9 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/jet.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.jetpackImage = pygame.image.load("res/jet.png").convert_alpha()
-        self.jetpackImage = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        self.jetpackImage = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.rect = self.image.get_rect()
         self.rect.top = 700
         self.vel = 0
@@ -20,13 +21,13 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect.centerx = st.SCREEN_WIDTH/5
 
-    def speedUpdate(self,factor):
-        #exponential speed increase
-        maxSpeed=50
-        if(self.speed < maxSpeed):
-            self.speed = round(self.speed ** factor,3)
-        else:
-            self.speed = maxSpeed
+    #def speedUpdate(self,factor):
+    #    #exponential speed increase
+    #    maxSpeed=50
+    #    if(self.speed < maxSpeed):
+    #        self.speed = round(self.speed ** factor,3)
+    #    else:
+    #        self.speed = maxSpeed
 class Ground(pygame.sprite.Sprite):
     def __init__(self, p_x):
         pygame.sprite.Sprite.__init__(self)
@@ -38,37 +39,47 @@ class Ground(pygame.sprite.Sprite):
         self.startPos = p_x
 
 class Hazard(pygame.sprite.Sprite):
-    def __init__(self, height = 150, mother = True, offset = 0, type = 0):
-        self.height = height
+    def __init__(self, mother = True, offset = 0):
+        self.rot = randint(-90, 90)
+        self.length = 200
         self.mother = mother
-        self.type = type
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface((50, self.height))
-        self.image = pygame.image.load("res/lazer.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image,(50, height))
-        
-        #if type == 0:            
-            #self.image.fill((170, 0, 0))
 
-        if type == 1:
-            #self.image = self.image.convert_alpha()
-            #self.image.fill((0, 170, 0, 255))
-            self.image = pygame.transform.rotate(self.image, 45)
-        elif type == 2:
-            #self.image = self.image.convert_alpha()
-            #self.image.fill((170, 170, 0, 255))
-            self.image = pygame.transform.rotate(self.image, -45)
-        elif type == 3:
-            #self.image.fill((0, 0, 170))
-            self.image = pygame.transform.rotate(self.image, 90)
+        self.image = pygame.image.load("res/lazer.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (self.length * st.scaleFactor, 50 * st.scaleFactor))
+        self.image = pygame.transform.rotate(self.image, self.rot)
         self.rect = self.image.get_rect()
+
+        self.head = LazerEnd()
+        self.tail = LazerEnd()
+
+        self.head.xOffset = ((self.length * st.scaleFactor)/2 * cos(radians(float(self.rot))))
+        self.head.yOffset = ((self.length * st.scaleFactor)/2 * sin(radians(float(self.rot))))
+        self.tail.xOffset = -((self.length * st.scaleFactor)/2 * cos(radians(float(self.rot))))
+        self.tail.yOffset = -((self.length * st.scaleFactor)/2 * sin(radians(float(self.rot))))
+
         self.rect.left = st.SCREEN_WIDTH + offset
-        self.rect.centery = randint(0 + self.height/2, st.SCREEN_HEIGHT - self.height/2-150)
+        
+        self.rect.centery = randint(0, int(st.SCREEN_HEIGHT - st.SCREEN_HEIGHT/7))
 
     def update(self):
         self.rect.x -= st.playerSpeed
+        self.head.rect.center = (self.rect.centerx + self.head.xOffset, self.rect.centery - self.head.yOffset)
+        self.tail.rect.center = (self.rect.centerx + self.tail.xOffset, self.rect.centery - self.tail.yOffset)
         if self.rect.right < 0:
+            self.head.kill()
+            self.tail.kill()
             self.kill()
+    
+class LazerEnd(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/shockerBall0.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (50 * st.scaleFactor, 50 * st.scaleFactor))
+        self.rect = self.image.get_rect()
+        self.xOffset = 0
+        self.yOffset = 0
+        
 
 class MissleWarning(pygame.sprite.Sprite):
     def __init__(self, p_y):      
@@ -102,6 +113,6 @@ class Cursor(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/cursor.png").convert_alpha()
-        self.image = pygame.transform.scale_by(self.image, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)

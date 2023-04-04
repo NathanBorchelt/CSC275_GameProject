@@ -26,13 +26,15 @@ ground2 = Ground(st.SCREEN_WIDTH/2)
 ground3 = Ground(st.SCREEN_WIDTH*3/4)
 ground4 = Ground(st.SCREEN_WIDTH)
 player = Player()
-haz = Hazard(200, True,0,randint(0,3))
+haz = Hazard(True,0)
 all_sprites.add(ground)
 all_sprites.add(ground1)
 all_sprites.add(ground2)
 all_sprites.add(ground3)
 all_sprites.add(ground4)
 all_sprites.add(haz)
+all_sprites.add(haz.head)
+all_sprites.add(haz.tail)
 ground_sprites.add(ground)
 ground_sprites.add(ground1)
 ground_sprites.add(ground2)
@@ -53,11 +55,12 @@ with open("highscore.txt", "r") as file:
         highscore = 0
 
 startGame = pygame.image.load("res/menuFrame.png").convert_alpha()
-startGame = pygame.transform.scale_by(startGame, st.SCREEN_WIDTH/st.BASE_WIDTH)
+startGame = pygame.transform.scale_by(startGame, st.scaleFactor)
 cursor = Cursor(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
 cursorGroup = pygame.sprite.Group()
 cursorGroup.add(cursor)
 
+print(cos(radians(30)))
 while running:
     while menu:
         for event in pygame.event.get():
@@ -101,6 +104,7 @@ while running:
 
     while game:
         timeSinceStart = time.time() - startTime
+        #player.speedUpdate()
         if timeSinceStart > 1 and timeCounter == 0:
             st.playerSpeed += 4
             timeCounter += 1
@@ -142,7 +146,7 @@ while running:
             player.jetpackImage = pygame.image.load("res/jetpack3.png")
             player.image = pygame.image.load("res/missleWarning.png")
             player.acc = -st.PLAYER_ACC
-        player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.SCREEN_WIDTH/st.BASE_WIDTH)
+        player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
         player.vel += player.acc 
         player.rect.y -= player.vel
 
@@ -185,15 +189,19 @@ while running:
             spawnPlatform = abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10
             if spawnPlatform and i.mother:
                 i.mother = False
-                haz2 = Hazard(randint(75, 125)*2, True, 0, randint(0,3))
+                haz2 = Hazard(True, 0)
                 lasers.add(haz2)
                 obstacles.add(haz2)
                 all_sprites.add(haz2)
+                all_sprites.add(haz2.head)
+                all_sprites.add(haz2.tail)
                 if (bool(randint(0,1))):    
-                    haz3 = Hazard(randint(75, 125)*2, False, randint(200 , round(st.SCREEN_WIDTH/4 )*2), randint(0, 3))   
+                    haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))   
                     lasers.add(haz3)
                     obstacles.add(haz3)
-                    all_sprites.add(haz3)  
+                    all_sprites.add(haz3)
+                    all_sprites.add(haz3.head)  
+                    all_sprites.add(haz3.tail)  
 
         resetGround = ground.startPos - ground.rect.x >= ground.rect.width
         if resetGround:
