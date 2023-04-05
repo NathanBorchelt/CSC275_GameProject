@@ -42,6 +42,8 @@ ground_sprites.add(ground3)
 ground_sprites.add(ground4)
 all_sprites.add(player)
 obstacles.add(haz)
+obstacles.add(haz.head)
+obstacles.add(haz.tail)
 lasers.add(haz)
 timeCounter = 0
 font = pygame.font.Font('res/New Athletic M54.ttf', 36)
@@ -62,7 +64,7 @@ cursorGroup.add(cursor)
 
 print(cos(radians(30)))
 while running:
-    while menu:
+    while menu: 
         for event in pygame.event.get():
             # check for closing window
             if event.type == pygame.QUIT:
@@ -140,10 +142,10 @@ while running:
 
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
-            player.jetpackImage = pygame.image.load(f"res/jetpack{int(frameCounter % 30 / 10)}.png")
+            player.jetpackImage = pygame.image.load(f"res/jetpack{int(frameCounter % 40 / 10) + 1}.png")
             player.image = pygame.image.load("res/jet.png")
         else:
-            player.jetpackImage = pygame.image.load("res/jetpack3.png")
+            player.jetpackImage = pygame.image.load("res/jetpack0.png")
             player.image = pygame.image.load("res/missleWarning.png")
             player.acc = -st.PLAYER_ACC
         player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
@@ -173,7 +175,7 @@ while running:
                 missles.add(missle)
                 all_sprites.add(missle)
                 warning.kill()
-            
+        
 
         for i in obstacles:
             if pygame.sprite.collide_mask(player, i):
@@ -184,6 +186,8 @@ while running:
         if int(score/300) > highscore:
             highscore = int(score/300)
                            
+        for i in missles:
+            i.image = pygame.image.load(f"res/missle{int(frameCounter % 60 / 10)}.png").convert_alpha()
 
         for i in lasers:
             spawnPlatform = abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10
@@ -192,6 +196,8 @@ while running:
                 haz2 = Hazard(True, 0)
                 lasers.add(haz2)
                 obstacles.add(haz2)
+                obstacles.add(haz2.head)
+                obstacles.add(haz2.tail)
                 all_sprites.add(haz2)
                 all_sprites.add(haz2.head)
                 all_sprites.add(haz2.tail)
@@ -199,6 +205,8 @@ while running:
                     haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))   
                     lasers.add(haz3)
                     obstacles.add(haz3)
+                    obstacles.add(haz3.head)
+                    obstacles.add(haz3.tail)
                     all_sprites.add(haz3)
                     all_sprites.add(haz3.head)  
                     all_sprites.add(haz3.tail)  

@@ -100,14 +100,16 @@ class MissleWarning(pygame.sprite.Sprite):
 class Missle(pygame.sprite.Sprite):
     def __init__(self, p_y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/missle.png").convert_alpha()
+        self.image = pygame.image.load("res/missle0.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = st.SCREEN_WIDTH + self.rect.width
         self.rect.y = p_y
+        self.time = time.time()
     def update(self):
         if self.rect.right < 0:
             self.kill()
-        self.rect.x -= st.playerSpeed + 15
+        self.rect.x -= st.playerSpeed + 25
+        
 
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y):
