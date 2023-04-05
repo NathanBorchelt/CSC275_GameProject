@@ -8,9 +8,9 @@ class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/jet.png").convert_alpha()
+        self.image = pygame.image.load("res/player/player0.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
-        self.jetpackImage = pygame.image.load("res/jet.png").convert_alpha()
+        self.jetpackImage = pygame.image.load("res/misc/jet.png").convert_alpha()
         self.jetpackImage = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.rect = self.image.get_rect()
         self.rect.top = 700
@@ -31,7 +31,7 @@ class Player(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self, p_x):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/tempG.png").convert_alpha()
+        self.image = pygame.image.load("res/hazards/tempG.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (st.SCREEN_WIDTH/4, st.SCREEN_HEIGHT/8))
         self.rect = self.image.get_rect()
         self.rect.bottom = st.SCREEN_HEIGHT
@@ -45,7 +45,7 @@ class Hazard(pygame.sprite.Sprite):
         self.mother = mother
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load("res/lazer.png").convert_alpha()
+        self.image = pygame.image.load("res/hazards/lazer.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.length * st.scaleFactor, 50 * st.scaleFactor))
         self.image = pygame.transform.rotate(self.image, self.rot)
         self.rect = self.image.get_rect()
@@ -74,7 +74,7 @@ class Hazard(pygame.sprite.Sprite):
 class LazerEnd(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/shockerBall0.png").convert_alpha()
+        self.image = pygame.image.load("res/hazards/shockerBall0.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (50 * st.scaleFactor, 50 * st.scaleFactor))
         self.rect = self.image.get_rect()
         self.xOffset = 0
@@ -84,7 +84,7 @@ class LazerEnd(pygame.sprite.Sprite):
 class MissleWarning(pygame.sprite.Sprite):
     def __init__(self, p_y):      
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/missleWarning.png").convert_alpha()
+        self.image = pygame.image.load("res/hazards/missleWarning.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = st.SCREEN_WIDTH - self.rect.width
         self.rect.y = p_y
@@ -93,14 +93,14 @@ class MissleWarning(pygame.sprite.Sprite):
     def update(self):
         self.spawn = time.time() - self.spawnTime
         if self.spawn % .5 > .25:
-            self.image = pygame.image.load("res/missleWarning.png").convert_alpha()
+            self.image = pygame.image.load("res/hazards/missleWarning.png").convert_alpha()
         else:
-            self.image = pygame.image.load("res/missleWarning2.png").convert_alpha()
+            self.image = pygame.image.load("res/hazards/missleWarning2.png").convert_alpha()
 
 class Missle(pygame.sprite.Sprite):
     def __init__(self, p_y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/missle0.png").convert_alpha()
+        self.image = pygame.image.load("res/hazards/missle0.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = st.SCREEN_WIDTH + self.rect.width
         self.rect.y = p_y
@@ -114,7 +114,7 @@ class Missle(pygame.sprite.Sprite):
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/cursor.png").convert_alpha()
+        self.image = pygame.image.load("res/menu/cursor.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)

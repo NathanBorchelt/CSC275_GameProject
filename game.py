@@ -56,7 +56,7 @@ with open("highscore.txt", "r") as file:
     except:
         highscore = 0
 
-startGame = pygame.image.load("res/menuFrame.png").convert_alpha()
+startGame = pygame.image.load("res/menu/menuFrame.png").convert_alpha()
 startGame = pygame.transform.scale_by(startGame, st.scaleFactor)
 cursor = Cursor(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
 cursorGroup = pygame.sprite.Group()
@@ -142,11 +142,11 @@ while running:
 
         if keyDownSpace:
             player.acc = st.PLAYER_ACC
-            player.jetpackImage = pygame.image.load(f"res/jetpack{int(frameCounter % 40 / 10) + 1}.png")
-            player.image = pygame.image.load("res/jet.png")
+            player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
+            player.image = pygame.image.load("res/player/player0.png")
         else:
-            player.jetpackImage = pygame.image.load("res/jetpack0.png")
-            player.image = pygame.image.load("res/missleWarning.png")
+            player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
+            player.image = pygame.image.load("res/player/player1.png")
             player.acc = -st.PLAYER_ACC
         player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
         player.vel += player.acc 
@@ -186,8 +186,8 @@ while running:
         if int(score/300) > highscore:
             highscore = int(score/300)
                            
-        for i in missles:
-            i.image = pygame.image.load(f"res/missle{int(frameCounter % 60 / 10)}.png").convert_alpha()
+        #for i in missles:
+        #    i.image = pygame.image.load(f"res/hazards/missle{int(frameCounter % 60 / 10)}.png").convert_alpha()
 
         for i in lasers:
             spawnPlatform = abs(i.rect.centerx - player.rect.centerx) < st.playerSpeed/2+10
