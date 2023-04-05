@@ -141,18 +141,18 @@ while running:
                     keyDownSpace = False       
 
         if keyDownSpace:
-            player.acc = st.PLAYER_ACC
             player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
-            player.image = pygame.image.load("res/player/player0.png")
+            player.acc = st.PLAYER_ACC
+            player.flying = True           
         else:
             player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
-            player.image = pygame.image.load("res/player/player1.png")
             player.acc = -st.PLAYER_ACC
+            player.flying = False
         player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
         player.vel += player.acc 
         player.rect.y -= player.vel
 
-        if player.rect.bottom > st.SCREEN_HEIGHT - ground.rect.height*2/3:
+        if player.rect.bottom >= st.SCREEN_HEIGHT - ground.rect.height*2/3:
             player.rect.bottom = st.SCREEN_HEIGHT - ground.rect.height*2/3
             player.vel = 0
         if player.rect.top < 0:
@@ -227,7 +227,7 @@ while running:
         all_sprites.update() 
         screen.fill((128, 186, 184))
         all_sprites.draw(screen)
-        screen.blit(player.jetpackImage, (player.rect.x - player.rect.width/4, player.rect.y + player.rect.height/8))
+        screen.blit(player.jetpackImage, (player.rect.centerx - 1.8* player.rect.width, player.rect.y + player.rect.height/10))
         screen.blit(text_surface, (25, 25))
         screen.blit(highscore_surface, (25, 75))
         pygame.display.flip()
