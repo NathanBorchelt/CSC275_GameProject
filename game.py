@@ -129,7 +129,8 @@ while running:
                 if event.key == pygame.K_SPACE:
                     keyDownSpace = True
                 if event.key == pygame.K_ESCAPE:
-                    running = False
+                    running = True
+                    menu = True
                     game = False
                     frameCounter = 0
                 if event.key == pygame.K_RIGHT:
