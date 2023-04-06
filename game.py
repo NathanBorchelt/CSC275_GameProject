@@ -1,10 +1,10 @@
 import pygame
 import time
 from Player import *
-        
+
 # initialize pygame and create window
 pygame.init()
-pygame.mixer.init()  
+pygame.mixer.init()
 screen = pygame.display.set_mode((st.SCREEN_WIDTH, st.SCREEN_HEIGHT))
 pygame.display.set_caption("Joypack Jetride")
 clock = pygame.time.Clock()
@@ -65,7 +65,7 @@ cursorGroup = pygame.sprite.Group()
 cursorGroup.add(cursor)
 
 while running:
-    while menu: 
+    while menu:
         for event in pygame.event.get():
             # check for closing window
             if event.type == pygame.QUIT:
@@ -83,8 +83,8 @@ while running:
                     cursor.rect.y += 1.5 * startGame.get_height()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                    keyDownSpace = False  
-            
+                    keyDownSpace = False
+
         if cursor.rect.centery < st.SCREEN_HEIGHT/2:
             cursor.rect.centery = st.SCREEN_HEIGHT/2
         elif cursor.rect.centery > st.SCREEN_HEIGHT/2 + 3 * startGame.get_height():
@@ -97,7 +97,7 @@ while running:
                 startTime = time.time()
                 missleStartTime = time.time()
                 missleInterval = randint(3, 7)
-            
+
         screen.fill((0, 0, 0))
         screen.blit(startGame, (st.SCREEN_WIDTH/2 - startGame.get_width()/2, st.SCREEN_HEIGHT/2 - startGame.get_height()/2))
         screen.blit(startGame, (st.SCREEN_WIDTH/2 - startGame.get_width()/2, st.SCREEN_HEIGHT/2 + startGame.get_height()))
@@ -140,19 +140,19 @@ while running:
                     st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                    keyDownSpace = False       
+                    keyDownSpace = False
 
         if keyDownSpace:
-            
+
             player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
             player.acc = st.PLAYER_ACC
-            player.flying = True           
+            player.flying = True
         else:
             player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
             player.acc = -st.PLAYER_ACC
             player.flying = False
         player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
-        player.vel += player.acc 
+        player.vel += player.acc
         player.rect.y -= player.vel
 
         if player.rect.bottom >= st.SCREEN_HEIGHT - ground.rect.height*2/3:
@@ -161,6 +161,11 @@ while running:
         if player.rect.top < 0:
             player.rect.top = 0
             player.vel = 0
+
+        if(random() < .1):
+            vehicle = VehicleSpawn()
+            all_sprites.add(vehicle)
+
 
         for warning in warnings:
             warning.rect.y += (player.rect.y - warning.rect.y)/60
@@ -172,13 +177,13 @@ while running:
             warnings.add(warning)
 
         for warning in warnings:
-            if warning.spawn > 3: 
+            if warning.spawn > 3:
                 missle = Missle(warning.rect.y)
                 obstacles.add(missle)
                 missles.add(missle)
                 all_sprites.add(missle)
                 warning.kill()
-        
+
 
         for i in obstacles:
             if pygame.sprite.collide_mask(player, i):
@@ -188,7 +193,7 @@ while running:
                         file.write(str(highscore))
         if int(score/300) > highscore:
             highscore = int(score/300)
-                           
+
         #for i in missles:
         #    i.image = pygame.image.load(f"res/hazards/missle{int(frameCounter % 60 / 10)}.png").convert_alpha()
 
@@ -204,30 +209,30 @@ while running:
                 all_sprites.add(haz2)
                 all_sprites.add(haz2.head)
                 all_sprites.add(haz2.tail)
-                if (bool(randint(0,1))):    
-                    haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))   
+                if (bool(randint(0,1))):
+                    haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))
                     lasers.add(haz3)
                     obstacles.add(haz3)
                     obstacles.add(haz3.head)
                     obstacles.add(haz3.tail)
                     all_sprites.add(haz3)
-                    all_sprites.add(haz3.head)  
-                    all_sprites.add(haz3.tail)  
+                    all_sprites.add(haz3.head)
+                    all_sprites.add(haz3.tail)
 
         resetGround = ground.startPos - ground.rect.x >= ground.rect.width
         if resetGround:
-            ground.rect.x = ground.startPos 
-            ground1.rect.x = ground1.startPos 
-            ground2.rect.x = ground2.startPos 
-            ground3.rect.x = ground3.startPos 
-            ground4.rect.x = ground4.startPos 
+            ground.rect.x = ground.startPos
+            ground1.rect.x = ground1.startPos
+            ground2.rect.x = ground2.startPos
+            ground3.rect.x = ground3.startPos
+            ground4.rect.x = ground4.startPos
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
-        
+
         text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
         highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
-        all_sprites.update() 
+        all_sprites.update()
         screen.fill((120, 120, 0))
         all_sprites.draw(screen)
         screen.blit(player.jetpackImage, (player.rect.centerx - 1.8* player.rect.width, player.rect.y + player.rect.height/10))
