@@ -49,6 +49,8 @@ timeCounter = 0
 font = pygame.font.Font('res/New Athletic M54.ttf', 36)
 score = 0
 frameCounter = 0
+#jetpackSound = pygame.mixer.Sound("jetpack.wav")
+#jetpackSound.play()
 
 with open("highscore.txt", "r") as file:
     try:
@@ -62,7 +64,6 @@ cursor = Cursor(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
 cursorGroup = pygame.sprite.Group()
 cursorGroup.add(cursor)
 
-print(cos(radians(30)))
 while running:
     while menu: 
         for event in pygame.event.get():
@@ -142,6 +143,7 @@ while running:
                     keyDownSpace = False       
 
         if keyDownSpace:
+            
             player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
             player.acc = st.PLAYER_ACC
             player.flying = True           
@@ -226,7 +228,7 @@ while running:
         highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
         all_sprites.update() 
-        screen.fill((128, 186, 184))
+        screen.fill((120, 120, 0))
         all_sprites.draw(screen)
         screen.blit(player.jetpackImage, (player.rect.centerx - 1.8* player.rect.width, player.rect.y + player.rect.height/10))
         screen.blit(text_surface, (25, 25))
