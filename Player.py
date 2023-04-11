@@ -3,10 +3,14 @@ import pygame
 from random import *
 import settings as st
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import time
 >>>>>>> main
 
+=======
+from math import sin, cos, radians
+>>>>>>> 37b01410485325f683ff0b1508f98e1044018e60
 class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
@@ -61,38 +65,43 @@ class Ground(pygame.sprite.Sprite):
 
 class Hazard(pygame.sprite.Sprite):
 <<<<<<< HEAD
+<<<<<<< HEAD
     def __init__(self, height = 150, mother = True, offset = 0, type = 0):
+=======
+    def __init__(self, height = 150, mother = True, offset = 0):
+>>>>>>> 37b01410485325f683ff0b1508f98e1044018e60
         self.height = height
         self.mother = mother
-        self.type = type
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface((50, self.height))
-        self.image = pygame.image.load("res/lazer.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image,(50, height))
 
+        self.head = pygame.image.load("res/shockerBall0.png").convert_alpha()
+        self.body = pygame.image.load("res/lazer.png").convert_alpha()
+        self.tail = pygame.image.load("res/shockerBall0.png").convert_alpha()
+        self.head_rect = self.head.get_rect()
+        self.body_rect = self.body.get_rect()
+        self.tail_rect = self.tail.get_rect()
         #if type == 0:
             #self.image.fill((170, 0, 0))
+        rot = randint(-90,90)
+        size = randint(160,240)
 
-        if type == 1:
-            #self.image = self.image.convert_alpha()
-            #self.image.fill((0, 170, 0, 255))
-            self.image = pygame.transform.rotate(self.image, 45)
-        elif type == 2:
-            #self.image = self.image.convert_alpha()
-            #self.image.fill((170, 170, 0, 255))
-            self.image = pygame.transform.rotate(self.image, -45)
-        elif type == 3:
-            #self.image.fill((0, 0, 170))
-            self.image = pygame.transform.rotate(self.image, 90)
-        self.rect = self.image.get_rect()
-        self.rect.left = st.WIDTH + offset
-        self.rect.centery = randint(0 + self.height/2, st.HEIGHT - self.height/2-150)
+        self.body - pygame.transform.rotate(rot)
+
+        self.body_rect.centery = self.height
+
+        self.heady = size/2*sin(radians(rot))
+        self.headx = size/2*cos(radians(rot))
+
+        self.taily = -size/2*sin(radians(rot))
+        self.tailx = -size/2*cos(radians(rot))
 
     def update(self):
-        if self.rect.right < 0:
-            self.rect.left = 1600
-            self.rect.centery = randint(0 + self.height/2, 900 - self.height/2)
-        self.rect.x -= st.playerSpeed
+        if self.body_rect.right < 0:
+            self.body_rect.left = 1600
+            self.head_rect.centery = randint(0 + self.height/2, 900 - self.height/2)
+        self.body_rect.x -= st.playerSpeed
+        self.head_rect.center = (self.body_rect.centerx+self.headx, self.body_rect.centery +self.heady)
+        self.tail_rect.center = (self.body_rect.centerx+self.tailx, self.body_rect.centery +self.taily)
         if self.rect.right < 0:
             self.kill()
 =======
