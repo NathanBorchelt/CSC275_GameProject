@@ -18,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.acc = 0
         self.frameCounter = 0
         self.flying = False
+        self.vehicle = 0
         
         
     def update(self):

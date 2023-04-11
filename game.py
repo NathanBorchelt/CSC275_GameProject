@@ -25,6 +25,7 @@ ground1 = Ground(st.SCREEN_WIDTH/4)
 ground2 = Ground(st.SCREEN_WIDTH/2)
 ground3 = Ground(st.SCREEN_WIDTH*3/4)
 ground4 = Ground(st.SCREEN_WIDTH)
+
 player = Player()
 haz = Hazard(True,0)
 all_sprites.add(ground)
@@ -32,6 +33,7 @@ all_sprites.add(ground1)
 all_sprites.add(ground2)
 all_sprites.add(ground3)
 all_sprites.add(ground4)
+
 all_sprites.add(haz)
 all_sprites.add(haz.head)
 all_sprites.add(haz.tail)
@@ -136,25 +138,40 @@ while running:
                     frameCounter = 0
                 if event.key == pygame.K_RIGHT:
                     st.playerSpeed += 4
+                    player.vehicle += 1
                 if event.key == pygame.K_LEFT:
                     st.playerSpeed -= 4
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     keyDownSpace = False       
 
-        if keyDownSpace:
-            
-            player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
-            player.acc = st.PLAYER_ACC
-            player.flying = True           
-        else:
-            player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
-            player.acc = -st.PLAYER_ACC
-            player.flying = False
-        player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
-        player.vel += player.acc 
-        player.rect.y -= player.vel
+        match player.vehicle:
+            case 0:
+                if keyDownSpace:
 
+                    player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
+                    player.acc = st.PLAYER_ACC
+                    player.flying = True           
+                else:
+                    player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
+                    player.acc = -st.PLAYER_ACC
+                    player.flying = False
+                player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
+                player.vel += player.acc 
+                player.rect.y -= player.vel
+            case 1:
+                if not keyDownSpace:
+
+                    player.jetpackImage = pygame.image.load(f"res/jetpack/jetpack{int(frameCounter % 40 / 10) + 1}.png")
+                    player.acc = st.PLAYER_ACC
+                    player.flying = True           
+                else:
+                    player.jetpackImage = pygame.image.load("res/jetpack/jetpack0.png")
+                    player.acc = -st.PLAYER_ACC
+                    player.flying = False
+                player.jetpackImage = pygame.transform.scale_by(player.jetpackImage, st.scaleFactor)
+                player.vel += player.acc 
+                player.rect.y -= player.vel
         if player.rect.bottom >= st.SCREEN_HEIGHT - ground.rect.height*2/3:
             player.rect.bottom = st.SCREEN_HEIGHT - ground.rect.height*2/3
             player.vel = 0
@@ -220,7 +237,7 @@ while running:
             ground1.rect.x = ground1.startPos 
             ground2.rect.x = ground2.startPos 
             ground3.rect.x = ground3.startPos 
-            ground4.rect.x = ground4.startPos 
+            ground4.rect.x = ground4.startPos
         for i in ground_sprites:
             i.rect.x -= st.playerSpeed
         
@@ -228,7 +245,7 @@ while running:
         highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
         score += st.playerSpeed
         all_sprites.update() 
-        screen.fill((120, 120, 0))
+        screen.fill((50, 50, 200))
         all_sprites.draw(screen)
         screen.blit(player.jetpackImage, (player.rect.centerx - 1.8* player.rect.width, player.rect.y + player.rect.height/10))
         screen.blit(text_surface, (25, 25))
