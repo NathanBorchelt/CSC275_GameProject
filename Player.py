@@ -161,21 +161,21 @@ class Gun(pygame.sprite.Sprite):
             self.rect.y += 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
+                bullet = EnemyBullet(self.rect.centerx, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 2:
             self.rect.y -= 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
+                bullet = EnemyBullet(self.rect.centerx, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 3:
             self.rect.x -= 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'down')
+                bullet = EnemyBullet(self.rect.centerx, self.rect.centery, 'down')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 4:

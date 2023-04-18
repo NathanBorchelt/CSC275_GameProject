@@ -246,7 +246,7 @@ class Game:
                             elif type(i) == LazerEnd:
                                 i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
                             else:
-                                i.image = pygame.image.load("res/transparent.png").convert_alpha()
+                                i.kill()
                             bul.kill()
 
 
