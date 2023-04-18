@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("res/player/player0.png").convert_alpha()
+        self.image = pygame.image.load("res/player/UFO0.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
         self.rect = self.image.get_rect()
         self.rect.top = 700
@@ -25,12 +25,12 @@ class Player(pygame.sprite.Sprite):
             self.frameCounter -= 1
         else:
             self.frameCounter += 1
-        self.image = pygame.image.load(f"res/player/player{int(self.frameCounter /10 % 5)}.png").convert_alpha()
+        self.image = pygame.image.load(f"res/player/UFO{int(self.frameCounter /10 % 3)}.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
 
     def speedUpdate(self,factor):
         #exponential speed increase
-        maxSpeed=15
+        maxSpeed = 25
         if(st.playerSpeed < maxSpeed):
             st.playerSpeed = round(st.playerSpeed ** factor,3)
         else:
@@ -143,27 +143,68 @@ class Bullet(pygame.sprite.Sprite):
 class Gun(pygame.sprite.Sprite):
     def __init__(self, groups):
         pygame.sprite.Sprite.__init__(self)
+        self.type = choice([1,2,3,4])
         self.image = pygame.image.load("res/hazards/gun.png").convert_alpha()
+        if self.type == 3:
+            self.image = pygame.transform.rotate(self.image, 90)
+        if self.type == 4:
+            self.image = pygame.transform.rotate(self.image, 270)
         self.rect = self.image.get_rect()
         self.rect.right = st.SCREEN_WIDTH
         self.rect.top = 0
+        if self.type == 2 or self.type == 4:
+            self.rect.bottom = st.SCREEN_HEIGHT
         self.spawn = time.time()
         self.groups = groups
     def update(self):
-        self.rect.y += 3
-        if time.time() - self.spawn > .75:
-            self.spawn = time.time()
-            bullet = EnemyBullet(self.rect.x, self.rect.centery)
-            for group in self.groups:
-                group.add(bullet)
+        if self.type == 1:
+            self.rect.y += 3
+            if time.time() - self.spawn > .75:
+                self.spawn = time.time()
+                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
+                for group in self.groups:
+                    group.add(bullet)
+        if self.type == 2:
+            self.rect.y -= 3
+            if time.time() - self.spawn > .75:
+                self.spawn = time.time()
+                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
+                for group in self.groups:
+                    group.add(bullet)
+        if self.type == 3:
+            self.rect.x -= 3
+            if time.time() - self.spawn > .75:
+                self.spawn = time.time()
+                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'down')
+                for group in self.groups:
+                    group.add(bullet)
+        if self.type == 4:
+            self.rect.x -= 3
+            if time.time() - self.spawn > .75:
+                self.spawn = time.time()
+                bullet = EnemyBullet(self.rect.centerx, self.rect.centery, 'up')
+                for group in self.groups:
+                    group.add(bullet)
+
             
 
 class EnemyBullet(Bullet):
-    def __init__(self, p_x, p_y):
+    def __init__(self, p_x, p_y, dir):
         super().__init__(p_x, p_y)
-        self.image = pygame.transform.rotate(self.image, 180)
+        self.dir = dir
+        if self.dir == 'left':
+            self.image = pygame.transform.rotate(self.image, 180)
+        if self.dir == 'up':
+            self.image = pygame.transform.rotate(self.image, 90)
+        if self.dir == 'down':
+            self.image = pygame.transform.rotate(self.image, 270)
     def update(self):
-        self.rect.x -= st.playerSpeed + 5
+        if self.dir == 'left':
+            self.rect.x -= st.playerSpeed + 5
+        if self.dir == 'up':
+            self.rect.y -= st.playerSpeed + 5
+        if self.dir == 'down':
+            self.rect.y += st.playerSpeed + 5
         if self.rect.right < 0:
             self.kill()
 

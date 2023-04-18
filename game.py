@@ -125,7 +125,7 @@ class Game:
 
         def run(self):
             self.timeSinceStart = time.time() - self.startTime
-            self.player.speedUpdate(1)
+            self.player.speedUpdate(1.001)
 
             if self.timeSinceStart > self.randomHazardSpawnTime:
                 self.startTime = time.time()
@@ -231,21 +231,23 @@ class Game:
                     warning.kill()
 
             for i in self.obstacles:
-                if pygame.sprite.collide_mask(self.player, i):
-                        self.new()
-                        with open("highscore.txt", 'w') as file:
-                            file.write(str(self.highscore))
+                if abs(i.rect.x - self.player.rect.x) < 150:
+                    if pygame.sprite.collide_mask(self.player, i):
+                            self.new()
+                            with open("highscore.txt", 'w') as file:
+                                file.write(str(self.highscore))
                 for bul in self.bullets:
-                    if pygame.sprite.collide_mask(bul, i):
-                        if i in self.lasers:
-                            i.image = pygame.image.load("res/transparent.png").convert_alpha()
-                            self.obstacles.remove(i.head)
-                            self.obstacles.remove(i.tail)
-                        elif type(i) == LazerEnd:
-                            i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
-                        else:
-                            i.image = pygame.image.load("res/transparent.png").convert_alpha()
-                        bul.kill()
+                    if abs(i.rect.x - bul.rect.x) < 150:
+                        if pygame.sprite.collide_mask(bul, i):
+                            if i in self.lasers:
+                                i.image = pygame.image.load("res/transparent.png").convert_alpha()
+                                self.obstacles.remove(i.head)
+                                self.obstacles.remove(i.tail)
+                            elif type(i) == LazerEnd:
+                                i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
+                            else:
+                                i.image = pygame.image.load("res/transparent.png").convert_alpha()
+                            bul.kill()
 
 
 
