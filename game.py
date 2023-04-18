@@ -245,6 +245,8 @@ class Game:
                                 self.obstacles.remove(i.tail)
                             elif type(i) == LazerEnd:
                                 i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
+                                self.obstacles.remove(i.parent.head)
+                                self.obstacles.remove(i.parent.tail)
                             else:
                                 i.kill()
                             bul.kill()
