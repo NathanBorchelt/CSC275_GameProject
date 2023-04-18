@@ -46,15 +46,15 @@ class Game:
             self.player = Player()
             self.haz = Hazard(True,0)
 
-            self.all_sprites.add(haz)
+            self.all_sprites.add(self.haz)
 
-            self.all_sprites.add(player)
-            self.obstacles.add(haz)
-            self.lasers.add(haz)
-            self.obstacles.add(haz.head)
-            self.obstacles.add(haz.tail)
-            self.all_sprites.add(haz.head)
-            self.all_sprites.add(haz.tail)
+            self.all_sprites.add(self.player)
+            self.obstacles.add(self.haz)
+            self.lasers.add(self.haz)
+            self.obstacles.add(self.haz.head)
+            self.obstacles.add(self.haz.tail)
+            self.all_sprites.add(self.haz.head)
+            self.all_sprites.add(self.haz.tail)
 
 #Game loop
             self.timeCounter = 0
@@ -124,7 +124,7 @@ class Game:
             return True
 
         def run(self):
-            self.timeSinceStart = time.time() - startTime
+            self.timeSinceStart = time.time() - self.startTime
             self.player.speedUpdate(1)
 
             if self.timeSinceStart > self.randomHazardSpawnTime:
@@ -136,170 +136,161 @@ class Game:
                     self.all_sprites.add(tempHaz)
                     self.obstacles.add(tempHaz)
             self.clock.tick(st.FPS)
+            for event in pygame.event.get():
+                # check for closing window
+                if event.type == pygame.QUIT:
+                    self.running = False
+                    return False
+                if event.type == pygame.KEYDOWN:
+                    match (event.key):
+                        case pygame.K_SPACE:
+                            keyPressedSpace = True
+                        case pygame.K_ESCAPE:
+                            self.running = True
+                            self.menu = True
+                            frameCounter = 0
+                            return False
+                        case pygame.K_RIGHT:
+                            self.keyPressedRight = True
+                        case pygame.K_LEFT:
+                            self.keyPressedLeft = True
+                        case pygame.K_UP:
+                            self.keyPressedUp = True
+                        case pygame.K_DOWN:
+                            self.keyPressedDown = True
+                if event.type == pygame.KEYUP:
+                    match (event.key):
+                        case pygame.K_SPACE:
+                            if len(self.bullets) < 3:
+                                bullet = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery)
+                                self.all_sprites.add(bullet)
+                                self.bullets.add(bullet)
+                            self.keyPressedSpace = False
+                        case pygame.K_RETURN:
+                            self.keyPressedSpace = False
+                        case pygame.K_RIGHT:
+                            self.keyPressedRight = False
+                        case pygame.K_LEFT:
+                            self.keyPressedLeft = False
+                        case pygame.K_UP:
+                            self.keyPressedUp = False
+                        case pygame.K_DOWN:
+                            self.keyPressedDown = False
 
-while running:
+            if self.keyPressedUp:
+                self.player.vely += st.PLAYER_ACC
+                if self.player.vely > 15:
+                    self.player.vely = 15
 
+                self.player.flying = True
+            elif self.keyPressedDown:
+                self.player.vely -= st.PLAYER_ACC
+                if self.player.vely < -15:
+                    self.player.vely = -15
+                self.player.flying = False
+            else:
+                self.player.vely *= 15/16
+                self.player.flying = False
+            if self.keyPressedLeft:
+                self.player.velx -= st.PLAYER_ACC
+                if self.player.velx < -15:
+                    self.player.velx = -15
+            elif self.keyPressedRight:
+                self.player.velx += st.PLAYER_ACC
+                if self.player.velx > 15:
+                    self.player.velx = 15
+            else:
+                self.player.velx *= 15/16
+            self.player.rect.y -= self.player.vely
+            self.player.rect.x += self.player.velx
 
-    while game:
-        timeSinceStart = time.time() - startTime
-        player.speedUpdate(1)
+            if self.player.rect.top > st.SCREEN_HEIGHT:
+                self.player.rect.bottom = 0
+            if self.player.rect.bottom < 0:
+                self.player.rect.top = st.SCREEN_HEIGHT
+            if self.player.rect.left < 0:
+                self.player.rect.left = 0
+            if self.player.rect.right > st.SCREEN_WIDTH:
+                self.player.rect.right = st.SCREEN_WIDTH
 
-        if timeSinceStart > randomHazardSpawnTime:
-            startTime = time.time()
-            randomHazardSpawnTime = randint(5, 10)
-            match(randint(0, 3)):
-                case _:
-                    tempHaz = Gun([all_sprites, obstacles])
-                    all_sprites.add(tempHaz)
-                    obstacles.add(tempHaz)
-        clock.tick(st.FPS)
-        for event in pygame.event.get():
-            # check for closing window
-            if event.type == pygame.QUIT:
-                running = False
-                game = False
-            if event.type == pygame.KEYDOWN:
-                match (event.key):
-                    case pygame.K_SPACE:
-                        keyPressedSpace = True
-                    case pygame.K_ESCAPE:
-                        running = True
-                        menu = True
+            for warning in self.warnings:
+                warning.rect.y += (self.player.rect.y - warning.rect.y)/60
+            if time.time() - self.missleStartTime > self.missleInterval:
+                self.missleStartTime = time.time()
+                self.missleInterval = randint(5, 7)
+                warning = MissleWarning(randint(0, st.SCREEN_HEIGHT))
+                self.all_sprites.add(warning)
+                self.warnings.add(warning)
+
+            for warning in self.warnings:
+                if warning.spawn > 3:
+                    missle = Missle(warning.rect.y)
+                    self.obstacles.add(missle)
+                    self.missles.add(missle)
+                    self.all_sprites.add(missle)
+                    warning.kill()
+
+            for i in self.obstacles:
+                if pygame.sprite.collide_mask(self.player, i):
+                        running = False
                         game = False
-                        frameCounter = 0
-                    case pygame.K_RIGHT:
-                        keyPressedRight = True
-                    case pygame.K_LEFT:
-                        keyPressedLeft = True
-                    case pygame.K_UP:
-                        keyPressedUp = True
-                    case pygame.K_DOWN:
-                        keyPressedDown = True
-            if event.type == pygame.KEYUP:
-                match (event.key):
-                    case pygame.K_SPACE:
-                        if len(bullets) < 3:
-                            bullet = Bullet(player.rect.centerx + player.rect.width/2, player.rect.centery)
-                            all_sprites.add(bullet)
-                            bullets.add(bullet)
-                        keyPressedSpace = False
-                    case pygame.K_RETURN:
-                        keyPressedSpace = False
-                    case pygame.K_RIGHT:
-                        keyPressedRight = False
-                    case pygame.K_LEFT:
-                        keyPressedLeft = False
-                    case pygame.K_UP:
-                        keyPressedUp = False
-                    case pygame.K_DOWN:
-                        keyPressedDown = False
-
-        if keyPressedUp:
-            player.vely += st.PLAYER_ACC
-            if player.vely > 15:
-                player.vely = 15
-
-            player.flying = True
-        elif keyPressedDown:
-            player.vely -= st.PLAYER_ACC
-            if player.vely < -15:
-                player.vely = -15
-            player.flying = False
-        else:
-            player.vely *= 15/16
-            player.flying = False
-        if keyPressedLeft:
-            player.velx -= st.PLAYER_ACC
-            if player.velx < -15:
-                player.velx = -15
-        elif keyPressedRight:
-            player.velx += st.PLAYER_ACC
-            if player.velx > 15:
-                player.velx = 15
-        else:
-            player.velx *= 15/16
-        player.rect.y -= player.vely
-        player.rect.x += player.velx
-
-        if player.rect.top > st.SCREEN_HEIGHT:
-            player.rect.bottom = 0
-        if player.rect.bottom < 0:
-            player.rect.top = st.SCREEN_HEIGHT
-        if player.rect.left < 0:
-            player.rect.left = 0
-        if player.rect.right > st.SCREEN_WIDTH:
-            player.rect.right = st.SCREEN_WIDTH
-
-        for warning in warnings:
-            warning.rect.y += (player.rect.y - warning.rect.y)/60
-        if time.time() - missleStartTime > missleInterval:
-            missleStartTime = time.time()
-            missleInterval = randint(5, 7)
-            warning = MissleWarning(randint(0, st.SCREEN_HEIGHT))
-            all_sprites.add(warning)
-            warnings.add(warning)
-
-        for warning in warnings:
-            if warning.spawn > 3:
-                missle = Missle(warning.rect.y)
-                obstacles.add(missle)
-                missles.add(missle)
-                all_sprites.add(missle)
-                warning.kill()
-
-        for i in obstacles:
-            if pygame.sprite.collide_mask(player, i):
-                    running = False
-                    game = False
-                    with open("highscore.txt", 'w') as file:
-                        file.write(str(highscore))
-            for bul in bullets:
-                if pygame.sprite.collide_mask(bul, i):
-                    if i in lasers:
-                        i.image = pygame.image.load("res/transparent.png").convert_alpha()
-                        obstacles.remove(i.head)
-                        obstacles.remove(i.tail)
-                    elif type(i) == LazerEnd:
-                        i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
-                    else:
-                        i.image = pygame.image.load("res/transparent.png").convert_alpha()
-                    bul.kill()
+                        with open("highscore.txt", 'w') as file:
+                            file.write(str(self.highscore))
+                for bul in self.bullets:
+                    if pygame.sprite.collide_mask(bul, i):
+                        if i in self.lasers:
+                            i.image = pygame.image.load("res/transparent.png").convert_alpha()
+                            self.obstacles.remove(i.head)
+                            self.obstacles.remove(i.tail)
+                        elif type(i) == LazerEnd:
+                            i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
+                        else:
+                            i.image = pygame.image.load("res/transparent.png").convert_alpha()
+                        bul.kill()
 
 
 
-        if int(score/300) > highscore:
-            highscore = int(score/300)
+            if int(self.score/300) > self.highscore:
+                self.highscore = int(self.score/300)
 
-        for i in lasers:
-            spawnPlatform = i.rect.centerx < st.SCREEN_WIDTH/2
-            if spawnPlatform and i.mother:
-                i.mother = False
-                haz2 = Hazard(True, 0)
-                lasers.add(haz2)
-                obstacles.add(haz2)
-                all_sprites.add(haz2)
-                obstacles.add(haz2.head)
-                obstacles.add(haz2.tail)
-                all_sprites.add(haz2.head)
-                all_sprites.add(haz2.tail)
-                if (bool(randint(0,1))):
-                    haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))
-                    lasers.add(haz3)
-                    obstacles.add(haz3)
-                    all_sprites.add(haz3)
-                    obstacles.add(haz3.head)
-                    obstacles.add(haz3.tail)
-                    all_sprites.add(haz3.head)
-                    all_sprites.add(haz3.tail)
+            for i in self.lasers:
+                spawnPlatform = i.rect.centerx < st.SCREEN_WIDTH/2
+                if spawnPlatform and i.mother:
+                    i.mother = False
+                    self.haz2 = Hazard(True, 0)
+                    self.lasers.add(self.haz2)
+                    self.obstacles.add(self.haz2)
+                    self.all_sprites.add(self.haz2)
+                    self.obstacles.add(self.haz2.head)
+                    self.obstacles.add(self.haz2.tail)
+                    self.all_sprites.add(self.haz2.head)
+                    self.all_sprites.add(self.haz2.tail)
+                    if (bool(randint(0,1))):
+                        self.haz3 = Hazard(False, randint(200 , round(st.SCREEN_WIDTH/4 )*2))
+                        self.lasers.add(self.haz3)
+                        self.obstacles.add(self.haz3)
+                        self.all_sprites.add(self.haz3)
+                        self.obstacles.add(self.haz3.head)
+                        self.obstacles.add(self.haz3.tail)
+                        self.all_sprites.add(self.haz3.head)
+                        self.all_sprites.add(self.haz3.tail)
 
-        text_surface = font.render(str(int(score/300)) + " M", True, (0,0,0))
-        highscore_surface = font.render("Highscore " + str(highscore) + " M", True, (0, 0, 0))
-        score += st.playerSpeed
-        all_sprites.update()
-        screen.fill((50, 50, 200))
-        all_sprites.draw(screen)
-        screen.blit(text_surface, (25, 25))
-        screen.blit(highscore_surface, (25, 75))
-        pygame.display.flip()
-        frameCounter += 1
+            text_surface = self.font.render(str(int(self.score/300)) + " M", True, (0,0,0))
+            highscore_surface = self.font.render("Highscore " + str(self.highscore) + " M", True, (0, 0, 0))
+            self.score += st.playerSpeed
+            self.all_sprites.update()
+            self.screen.fill((50, 50, 200))
+            self.all_sprites.draw(self.screen)
+            self.screen.blit(text_surface, (25, 25))
+            self.screen.blit(highscore_surface, (25, 75))
+            pygame.display.flip()
+            self.frameCounter += 1
+            return True
+
+
+g = Game()
+g.load()
+g.new()
+g.execution()
+
 pygame.quit()
