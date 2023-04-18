@@ -129,12 +129,12 @@ class Game:
 
             if self.timeSinceStart > self.randomHazardSpawnTime:
                 self.startTime = time.time()
-            self.randomHazardSpawnTime = randint(5, 10)
-            match(randint(0, 3)):
-                case _:
-                    tempHaz = Gun([self.all_sprites, self.obstacles])
-                    self.all_sprites.add(tempHaz)
-                    self.obstacles.add(tempHaz)
+                self.randomHazardSpawnTime = randint(5, 10)
+                match(randint(0, 3)):
+                    case _:
+                        tempHaz = Gun([self.all_sprites, self.obstacles])
+                        self.all_sprites.add(tempHaz)
+                        self.obstacles.add(tempHaz)
             self.clock.tick(st.FPS)
             for event in pygame.event.get():
                 # check for closing window
@@ -144,11 +144,11 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     match (event.key):
                         case pygame.K_SPACE:
-                            keyPressedSpace = True
+                            self.keyPressedSpace = True
                         case pygame.K_ESCAPE:
                             self.running = True
                             self.menu = True
-                            frameCounter = 0
+                            self.frameCounter = 0
                             return False
                         case pygame.K_RIGHT:
                             self.keyPressedRight = True
@@ -232,8 +232,7 @@ class Game:
 
             for i in self.obstacles:
                 if pygame.sprite.collide_mask(self.player, i):
-                        running = False
-                        game = False
+                        self.new()
                         with open("highscore.txt", 'w') as file:
                             file.write(str(self.highscore))
                 for bul in self.bullets:
