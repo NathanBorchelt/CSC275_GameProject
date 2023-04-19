@@ -43,6 +43,7 @@ class Game:
             self.warnings = pygame.sprite.Group()
             self.missles = pygame.sprite.Group()
             self.bullets = pygame.sprite.Group()
+            self.starsGroup = []
             self.player = Player()
             self.haz = Hazard(True,0)
 
@@ -284,12 +285,23 @@ class Game:
             self.score += st.playerSpeed
             self.all_sprites.update()
             self.screen.fill((12, 12, 12))
+
+            if self.frameCounter % 10 == 0:
+                self.stars()
+            for star in self.starsGroup:
+                self.screen.fill((255, 255, 255), star)
             self.all_sprites.draw(self.screen)
             self.screen.blit(text_surface, (25, 25))
             self.screen.blit(highscore_surface, (25, 75))
             pygame.display.flip()
             self.frameCounter += 1
             return True
+        def stars(self):
+            self.starsGroup.clear()
+            for i in range(0, 100):
+                size = randint(0,10)
+                self.tempRect = pygame.Rect(randint(0,st.SCREEN_WIDTH), randint(0, st.SCREEN_HEIGHT), size, size)
+                self.starsGroup.append(self.tempRect)
 
 
 g = Game()
