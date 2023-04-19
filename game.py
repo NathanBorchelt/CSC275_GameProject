@@ -63,7 +63,11 @@ class Game:
             self.score = 0
             self.frameCounter = 0
             self.randomHazardSpawnTime = 7
-
+            self.keyPressedUp = False
+            self.keyPressedDown = False
+            self.keyPressedLeft = False
+            self.keyPressedRight = False
+            self.keyPressedSpace = False
 
 
             self.startGame = pygame.image.load("res/menu/menuFrame.png").convert_alpha()
@@ -234,9 +238,10 @@ class Game:
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
                     if pygame.sprite.collide_mask(self.player, i):
-                            self.new()
                             with open("highscore.txt", 'w') as file:
                                 file.write(str(self.highscore))
+                            self.new()
+                            return
                 for bul in self.bullets:
                     if abs(i.rect.x - bul.rect.x) < 150:
                         if pygame.sprite.collide_mask(bul, i):
@@ -298,8 +303,8 @@ class Game:
             return True
         def stars(self):
             self.starsGroup.clear()
-            for i in range(0, 100):
-                size = randint(0,10)
+            for i in range(0, 80):
+                size = randint(0,3)
                 self.tempRect = pygame.Rect(randint(0,st.SCREEN_WIDTH), randint(0, st.SCREEN_HEIGHT), size, size)
                 self.starsGroup.append(self.tempRect)
 
