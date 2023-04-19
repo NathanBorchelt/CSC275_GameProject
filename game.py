@@ -80,6 +80,16 @@ class Game:
             self.running = True
             self.game = False
 
+            self.mercury = [0, 100, 0, 16, 16, 2, 100]
+            self.venus = [0, 300, 16, 28, 28, 2, 300]
+            self.earth = [0, 500, 44, 28, 28, 2, 500]
+            self.mars = [0, 700, 72, 16, 16, 2, 700]
+            self.jupiter = [0, 900, 88, 160, 160, 2, 900]
+            self.saturn = [0, 1100, 248, 242, 106, 2, 1100]
+            self.uranus = [0, 1300, 490, 94, 150, 2, 1300]
+            self.neptune = [0, 1500, 584, 94, 94, 2, 1500]
+            self.planets = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune]
+
         def execution(self):
             while self.running:
                 while self.menu:
@@ -119,13 +129,29 @@ class Game:
                     self.missleInterval = randint(3, 7)
                     self.game = True
                     return False
-
+            self.sun = pygame.image.load("res/menu/sun.png").convert_alpha()
+            self.planetSheet = pygame.image.load("res/menu/planetsSheet.png").convert_alpha()
+            self.planetSheet = pygame.transform.scale2x(self.planetSheet)
+            
             self.screen.fill((0, 0, 0))
+            if self.frameCounter % 30 == 0:
+                self.stars()
+            for star in self.starsGroup:
+                self.screen.fill((255, 255, 255), star)
+            self.screen.blit(self.sun,(0,0))
+            for planet in self.planets:
+                planet[0] += planet[5]
+                planet[1] -= planet[5]
+                if planet[1] < -planet[4]:
+                    planet[0] = -planet[3]
+                    planet[1] = planet[6]
+                self.screen.blit(self.planetSheet, (planet[0], planet[1]), (planet[2], 0, planet[3], planet[4]))
             self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 - self.startGame.get_height()/2))
             self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 + self.startGame.get_height()))
             self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 + self.startGame.get_height()* 2.5))
             self.cursorGroup.draw(self.screen)
             pygame.display.flip()
+            self.frameCounter += 1
             return True
 
         def run(self):
