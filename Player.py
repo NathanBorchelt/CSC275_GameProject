@@ -73,10 +73,10 @@ class Hazard(pygame.sprite.Sprite):
         self.head = LazerEnd(self)
         self.tail = LazerEnd(self)
 
-        self.head.xOffset = ((self.length * st.scaleFactor)/2 * cos(radians(float(self.rot))))
-        self.head.yOffset = ((self.length * st.scaleFactor)/2 * sin(radians(float(self.rot))))
-        self.tail.xOffset = -((self.length * st.scaleFactor)/2 * cos(radians(float(self.rot))))
-        self.tail.yOffset = -((self.length * st.scaleFactor)/2 * sin(radians(float(self.rot))))
+        self.head.xOffset = ((self.length)/2 * cos(radians(float(self.rot))))
+        self.head.yOffset = ((self.length)/2 * sin(radians(float(self.rot))))
+        self.tail.xOffset = -((self.length)/2 * cos(radians(float(self.rot))))
+        self.tail.yOffset = -((self.length)/2 * sin(radians(float(self.rot))))
 
         self.rect.left = st.SCREEN_WIDTH + offset
         

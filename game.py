@@ -80,14 +80,15 @@ class Game:
             self.running = True
             self.game = False
 
-            self.mercury = [0, 100, 0, 16, 16, 2, 100]
-            self.venus = [0, 300, 16, 28, 28, 2, 300]
-            self.earth = [0, 500, 44, 28, 28, 2, 500]
-            self.mars = [0, 700, 72, 16, 16, 2, 700]
-            self.jupiter = [0, 900, 88, 160, 160, 2, 900]
-            self.saturn = [0, 1100, 248, 242, 106, 2, 1100]
-            self.uranus = [0, 1300, 490, 94, 150, 2, 1300]
-            self.neptune = [0, 1500, 584, 94, 94, 2, 1500]
+            maxY = st.SCREEN_WIDTH + st.SCREEN_HEIGHT
+            self.mercury = [-16, 100, 0, 16, 16, 1, 100]
+            self.venus = [-28, 300, 16, 28, 28, 1.5, 300]
+            self.earth = [-28, 500, 44, 28, 28, 2, 500]
+            self.mars = [-16, 700, 72, 16, 16, 2, 700]
+            self.jupiter = [-160, maxY/3 + 160, 88, 160, 160, 1, maxY/3 + 160]
+            self.saturn = [-242, maxY/2 + 150, 248, 242, 106, 1.5, maxY/2  + 150]
+            self.uranus = [-94, maxY*3/4, 490, 94, 150, 1.5, maxY*3/4]
+            self.neptune = [-94, maxY - 94, 584, 94, 94, 2.5, maxY - 94]
             self.planets = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune]
 
         def execution(self):
