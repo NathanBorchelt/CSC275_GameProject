@@ -3,6 +3,7 @@ import tkinter as tk
 root = tk.Tk()
 SCREEN_WIDTH = root.winfo_screenwidth()
 SCREEN_HEIGHT = SCREEN_WIDTH * 9/16
+SCREEN_CENTER = (SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
 FPS = 60
 SPEED = 10
 PLAYER_ACC = 1

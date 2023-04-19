@@ -29,7 +29,7 @@ class Game:
             self.keyPressedRight = False
 
         def load(self):
-            with open("highscore.txt", "r") as file:
+            with open("high.score", "r") as file:
                 try:
                     self.highscore = int(file.readline())
                 except:
@@ -70,9 +70,9 @@ class Game:
             self.keyPressedSpace = False
 
 
-            self.startGame = pygame.image.load("res/menu/menuFrame.png").convert_alpha()
-            self.startGame = pygame.transform.scale_by(self.startGame, st.scaleFactor)
-            self.cursor = Cursor(st.SCREEN_WIDTH/2, st.SCREEN_HEIGHT/2)
+            self.menuButton = pygame.image.load("res/menu/menuFrame.png").convert_alpha()
+            self.menuButton = pygame.transform.scale_by(self.menuButton, st.scaleFactor)
+            self.cursor = Cursor(st.SCREEN_WIDTH/2 -150, st.SCREEN_HEIGHT/2)
             self.cursorGroup = pygame.sprite.Group()
             self.cursorGroup.add(self.cursor)
 
@@ -111,17 +111,17 @@ class Game:
                         self.running = False
                         return False
                     if event.key == pygame.K_UP:
-                        self.cursor.rect.y -= 1.5 * self.startGame.get_height()
+                        self.cursor.rect.y -= 1.5 * self.menuButton.get_height()
                     if event.key == pygame.K_DOWN:
-                        self.cursor.rect.y += 1.5 * self.startGame.get_height()
+                        self.cursor.rect.y += 1.5 * self.menuButton.get_height()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.keyPressedSpace = False
 
             if self.cursor.rect.centery < st.SCREEN_HEIGHT/2:
+                self.cursor.rect.centery = st.SCREEN_HEIGHT/2  + 3 * self.menuButton.get_height()
+            elif self.cursor.rect.centery > st.SCREEN_HEIGHT/2 + 3 * self.menuButton.get_height():
                 self.cursor.rect.centery = st.SCREEN_HEIGHT/2
-            elif self.cursor.rect.centery > st.SCREEN_HEIGHT/2 + 3 * self.startGame.get_height():
-                self.cursor.rect.centery = st.SCREEN_HEIGHT/2 + 3 * self.startGame.get_height()
 
             if self.keyPressedSpace:
                 if self.cursor.rect.centery <= st.SCREEN_HEIGHT/2:
@@ -147,9 +147,9 @@ class Game:
                     planet[0] = -planet[3]
                     planet[1] = planet[6]
                 self.screen.blit(self.planetSheet, (planet[0], planet[1]), (planet[2], 0, planet[3], planet[4]))
-            self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 - self.startGame.get_height()/2))
-            self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 + self.startGame.get_height()))
-            self.screen.blit(self.startGame, (st.SCREEN_WIDTH/2 - self.startGame.get_width()/2, st.SCREEN_HEIGHT/2 + self.startGame.get_height()* 2.5))
+            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
+            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
+            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
             self.cursorGroup.draw(self.screen)
             pygame.display.flip()
             self.frameCounter += 1
@@ -265,7 +265,7 @@ class Game:
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
                     if pygame.sprite.collide_mask(self.player, i):
-                            with open("highscore.txt", 'w') as file:
+                            with open("high.score", "w") as file:
                                 file.write(str(self.highscore))
                             self.new()
                             return
