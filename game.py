@@ -244,9 +244,10 @@ class Game:
                                 self.obstacles.remove(i.head)
                                 self.obstacles.remove(i.tail)
                             elif type(i) == LazerEnd:
-                                i.parent.image = pygame.image.load("res/transparent.png").convert_alpha()
-                                self.obstacles.remove(i.parent.head)
-                                self.obstacles.remove(i.parent.tail)
+                                curr = i.parent
+                                curr.image = pygame.image.load("res/transparent.png").convert_alpha()
+                                self.obstacles.remove(curr.head)
+                                self.obstacles.remove(curr.tail)
                             else:
                                 i.kill()
                             bul.kill()
@@ -278,11 +279,11 @@ class Game:
                         self.all_sprites.add(self.haz3.head)
                         self.all_sprites.add(self.haz3.tail)
 
-            text_surface = self.font.render(str(int(self.score/300)) + " M", True, (0,0,0))
-            highscore_surface = self.font.render("Highscore " + str(self.highscore) + " M", True, (0, 0, 0))
+            text_surface = self.font.render(str(int(self.score/300)) + " M", True, (170,170,170))
+            highscore_surface = self.font.render("Highscore " + str(self.highscore) + " M", True, (170, 170, 170))
             self.score += st.playerSpeed
             self.all_sprites.update()
-            self.screen.fill((50, 50, 200))
+            self.screen.fill((12, 12, 12))
             self.all_sprites.draw(self.screen)
             self.screen.blit(text_surface, (25, 25))
             self.screen.blit(highscore_surface, (25, 75))

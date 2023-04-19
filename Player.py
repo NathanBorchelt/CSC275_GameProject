@@ -18,15 +18,30 @@ class Player(pygame.sprite.Sprite):
         self.frameCounter = 0
         self.flying = False
         self.rect.centerx = st.SCREEN_WIDTH/5
+        self.prevPos = self.rect.x
+        self.state = 0
         
         
-    def update(self):      
-        if self.flying:
-            self.frameCounter -= 1
+    def update(self):
+        if self.prevPos < self.rect.x:
+            if self.state != 1:
+                self.state = 1
+                self.frameCounter = 0
+            self.image = pygame.image.load(f"res/player/UFO_R{int(self.frameCounter /10 % 3)}.png").convert_alpha()
+
+        elif self.prevPos > self.rect.x:
+            if self.state != -1:
+                self.state = -1
+                self.frameCounter = 0
+            self.image = pygame.image.load(f"res/player/UFO_L{int(self.frameCounter /10 % 3)}.png").convert_alpha()
         else:
-            self.frameCounter += 1
-        self.image = pygame.image.load(f"res/player/UFO{int(self.frameCounter /10 % 3)}.png").convert_alpha()
+            if self.state != 0:
+                self.state = 0
+                self.frameCounter = 0
+            self.image = pygame.image.load(f"res/player/UFO{int(self.frameCounter /10 % 3)}.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
+        self.prevPos = self.rect.x
+        self.frameCounter += 1
 
     def speedUpdate(self,factor):
         #exponential speed increase
