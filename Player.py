@@ -146,7 +146,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self,p_x, p_y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/player/bullet.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 4))
+        self.image = pygame.transform.scale(self.image, (20, 10))
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)
 
@@ -176,36 +176,40 @@ class Gun(pygame.sprite.Sprite):
             self.rect.y += 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.centerx  + 10, self.rect.centery, 'left')
+                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 2:
             self.rect.y -= 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.centerx  + 10, self.rect.centery, 'left')
+                bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 3:
             self.rect.x -= 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.centerx  + 10, self.rect.centery, 'down')
+                bullet = EnemyBullet(self.rect.centerx, self.rect.y + self.rect.h, 'down')
                 for group in self.groups:
                     group.add(bullet)
         if self.type == 4:
             self.rect.x -= 3
             if time.time() - self.spawn > .75:
                 self.spawn = time.time()
-                bullet = EnemyBullet(self.rect.centerx + 10, self.rect.centery, 'up')
+                bullet = EnemyBullet(self.rect.centerx, self.rect.y, 'up')
                 for group in self.groups:
                     group.add(bullet)
 
             
 
-class EnemyBullet(Bullet):
+class EnemyBullet(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y, dir):
-        super().__init__(p_x, p_y)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("res/hazards/bullet.png").convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.center = (p_x, p_y)
+        
         self.dir = dir
         if self.dir == 'left':
             self.image = pygame.transform.rotate(self.image, 180)
@@ -218,8 +222,10 @@ class EnemyBullet(Bullet):
             self.rect.x -= st.playerSpeed + 5
         if self.dir == 'up':
             self.rect.y -= st.playerSpeed + 5
+            #self.rect.x -= 3
         if self.dir == 'down':
             self.rect.y += st.playerSpeed + 5
+            #self.rect.x -= 3
         if self.rect.right < 0:
             self.kill()
 

@@ -323,7 +323,9 @@ class Game:
             for star in self.starsGroup:
                 self.screen.fill((255, 255, 255), star)
             self.all_sprites.draw(self.screen)
-            self.obstacles.draw(self.screen)
+            for i in self.obstacles:
+                if type(i) == Gun:
+                    self.screen.blit(i.image, i.rect.topleft)
             self.screen.blit(text_surface, (25, 25))
             self.screen.blit(highscore_surface, (25, 75))
             pygame.display.flip()
