@@ -75,6 +75,8 @@ class Game:
             self.cursor = Cursor(st.SCREEN_WIDTH/2 -150, st.SCREEN_HEIGHT/2)
             self.cursorGroup = pygame.sprite.Group()
             self.cursorGroup.add(self.cursor)
+            self.cursorIndex = 0
+            self.cursorPos = [st.SCREEN_HEIGHT/2, st.SCREEN_HEIGHT/2 + 1.5 * self.menuButton.get_height(),st.SCREEN_HEIGHT/2  + 3 * self.menuButton.get_height()]
 
             self.menu = True
             self.running = True
@@ -111,25 +113,32 @@ class Game:
                         self.running = False
                         return False
                     if event.key == pygame.K_UP:
-                        self.cursor.rect.y -= 1.5 * self.menuButton.get_height()
+                        self.cursorIndex -= 1
                     if event.key == pygame.K_DOWN:
-                        self.cursor.rect.y += 1.5 * self.menuButton.get_height()
+                        self.cursorIndex += 1
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.keyPressedSpace = False
 
-            if self.cursor.rect.centery < st.SCREEN_HEIGHT/2:
-                self.cursor.rect.centery = st.SCREEN_HEIGHT/2  + 3 * self.menuButton.get_height()
-            elif self.cursor.rect.centery > st.SCREEN_HEIGHT/2 + 3 * self.menuButton.get_height():
-                self.cursor.rect.centery = st.SCREEN_HEIGHT/2
+            if self.cursorIndex < 0:
+                self.cursorIndex = 2
+            elif self.cursorIndex > 2:
+                self.cursorIndex = 0
 
             if self.keyPressedSpace:
-                if self.cursor.rect.centery <= st.SCREEN_HEIGHT/2:
+                if self.cursorIndex == 0:
                     self.startTime = time.time()
                     self.missleStartTime = time.time()
                     self.missleInterval = randint(3, 7)
                     self.game = True
                     return False
+                elif self.cursorIndex == 1:
+                    print("Options")
+                elif self.cursorIndex == 2:
+                    self.menu == False
+                    self.running = False
+                    return False
+
             self.sun = pygame.image.load("res/menu/sun.png").convert_alpha()
             self.planetSheet = pygame.image.load("res/menu/planetsSheet.png").convert_alpha()
             self.planetSheet = pygame.transform.scale2x(self.planetSheet)
@@ -147,10 +156,10 @@ class Game:
                     planet[0] = -planet[3]
                     planet[1] = planet[6]
                 self.screen.blit(self.planetSheet, (planet[0], planet[1]), (planet[2], 0, planet[3], planet[4]))
+            self.screen.blit(self.cursor.image, (st.SCREEN_WIDTH*3/8, self.cursorPos[self.cursorIndex] - 25 * st.scaleFactor))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
-            self.cursorGroup.draw(self.screen)
             pygame.display.flip()
             self.frameCounter += 1
             return True
