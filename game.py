@@ -318,11 +318,12 @@ class Game:
             self.all_sprites.update()
             self.screen.fill((12, 12, 12))
 
-            if self.frameCounter % 10 == 0:
+            if self.frameCounter % 30 == 0:
                 self.stars()
             for star in self.starsGroup:
                 self.screen.fill((255, 255, 255), star)
             self.all_sprites.draw(self.screen)
+            self.obstacles.draw(self.screen)
             self.screen.blit(text_surface, (25, 25))
             self.screen.blit(highscore_surface, (25, 75))
             pygame.display.flip()
