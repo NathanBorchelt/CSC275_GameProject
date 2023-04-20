@@ -70,7 +70,8 @@ class Game:
             self.keyPressedRight = False
             self.keyPressedSpace = False
 
-
+            self.title = pygame.image.load("res/menu/title.png").convert_alpha()
+            self.title = pygame.transform.scale2x(self.title)
             self.menuButton = pygame.image.load("res/menu/menuFrame.png").convert_alpha()
             self.menuButton = pygame.transform.scale_by(self.menuButton, st.scaleFactor)
             self.cursor = Cursor(st.SCREEN_WIDTH/2 -150, st.SCREEN_HEIGHT/2)
@@ -163,6 +164,7 @@ class Game:
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
+            self.screen.blit(self.title, (st.SCREEN_WIDTH/2 - 450, st.SCREEN_HEIGHT/6))
             pygame.display.flip()
             self.frameCounter += 1
             return True
