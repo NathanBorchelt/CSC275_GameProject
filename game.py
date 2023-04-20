@@ -1,6 +1,7 @@
 import pygame
 import time
 from Player import *
+import pickle
 
 
 
@@ -29,9 +30,9 @@ class Game:
             self.keyPressedRight = False
 
         def load(self):
-            with open("high.score", "r") as file:
+            with open("highscore.bin", "rb") as file:
                 try:
-                    self.highscore = int(file.readline())
+                    self.highscore = pickle.loads(file.readline())
                 except:
                     self.highscore = 0
 
@@ -83,6 +84,7 @@ class Game:
             self.game = False
 
             maxY = st.SCREEN_WIDTH + st.SCREEN_HEIGHT
+            #self.item = [x, y, xRef, width, height, speed, reset]
             self.mercury = [-16, 100, 0, 16, 16, 1, 100]
             self.venus = [-28, 300, 16, 28, 28, 1.5, 300]
             self.earth = [-28, 500, 44, 28, 28, 2, 500]
@@ -101,6 +103,7 @@ class Game:
                     self.game = self.run()
 
         def menuLoop(self):
+            self.clock.tick(st.FPS)
             for event in pygame.event.get():
                 # check for closing window
                 if event.type == pygame.QUIT:
@@ -274,8 +277,8 @@ class Game:
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
                     if pygame.sprite.collide_mask(self.player, i):
-                            with open("high.score", "w") as file:
-                                file.write(str(self.highscore))
+                            with open("highscore.bin", "wb") as file:
+                                file.write(pickle.dumps(self.highscore))
                             self.new()
                             return
                 for bul in self.bullets:
