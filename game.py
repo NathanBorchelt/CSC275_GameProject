@@ -73,8 +73,7 @@ class Game:
             
 #Game loop
             self.timeCounter = 0
-            self.font = pygame.font.Font('res/New Athletic M54.ttf', 36)
-            self.titleFont = pygame.font.Font('res/Alien_S.ttf', 42)
+            self.titleFont = pygame.font.Font('res/Voyager.ttf', 40)
             self.score = 0
             self.frameCounter = 0
             self.randomHazardSpawnTime = 7
@@ -110,9 +109,9 @@ class Game:
             self.neptune = [-94, maxY - 94, 584, 94, 94, 2.5, maxY - 94]
             self.planets = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune]
 
-            self.beginText = self.titleFont.render("BEGIN", True, (255,153,0))
+            self.beginText = self.titleFont.render("START", True, (255,153,0))
             self.optionsText = self.titleFont.render("OPTIONS", True, (255,153,0))
-            self.endText = self.titleFont.render("END", True, (255,153,0))
+            self.endText = self.titleFont.render("EXIT", True, (255,153,0))
         def execution(self):
             while self.running:
                 while self.menu:
@@ -356,8 +355,8 @@ class Game:
                         self.all_sprites.add(self.haz3.head)
                         self.all_sprites.add(self.haz3.tail)
 
-            text_surface = self.font.render(str(int(self.score/300)) + " M", True, (170,170,170))
-            highscore_surface = self.font.render("Highscore " + str(self.highscore) + " M", True, (170, 170, 170))
+            text_surface = self.titleFont.render(str(int(self.score/300)) + " M", True, (170,170,170))
+            highscore_surface = self.titleFont.render("Highscore " + str(self.highscore) + " M", True, (170, 170, 170))
             self.score += st.playerSpeed
             self.all_sprites.update()
             self.screen.fill((12, 12, 12))
