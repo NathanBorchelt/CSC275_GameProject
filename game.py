@@ -158,6 +158,8 @@ class Game:
                 elif self.cursorIndex == 2:
                     self.menu == False
                     self.running = False
+                    with open("highscore.bin", "wb") as file:
+                        file.write(pickle.dumps(self.highscore))
                     return False
 
             self.sun = pygame.image.load("res/menu/sun.png").convert_alpha()
