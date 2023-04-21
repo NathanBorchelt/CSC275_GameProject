@@ -11,7 +11,7 @@ class Game:
             pygame.init()
             pygame.mixer.init()
 
-            
+            self.lazerDestroy = pygame.mixer.Sound("sounds/lazerDestroy.wav")
             self.playerShoot = pygame.mixer.Sound("sounds/playerShoot.wav")
             self.gunShoot = pygame.mixer.Sound("sounds/gunShoot.wav")
             self.missleSound = pygame.mixer.Sound("sounds/missleSound.wav")
@@ -74,6 +74,7 @@ class Game:
 #Game loop
             self.timeCounter = 0
             self.font = pygame.font.Font('res/New Athletic M54.ttf', 36)
+            self.titleFont = pygame.font.Font('res/Alien_S.ttf', 42)
             self.score = 0
             self.frameCounter = 0
             self.randomHazardSpawnTime = 7
@@ -109,6 +110,9 @@ class Game:
             self.neptune = [-94, maxY - 94, 584, 94, 94, 2.5, maxY - 94]
             self.planets = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune]
 
+            self.beginText = self.titleFont.render("BEGIN", True, (255,153,0))
+            self.optionsText = self.titleFont.render("OPTIONS", True, (255,153,0))
+            self.endText = self.titleFont.render("END", True, (255,153,0))
         def execution(self):
             while self.running:
                 while self.menu:
@@ -175,8 +179,14 @@ class Game:
                 self.screen.blit(self.planetSheet, (planet[0], planet[1]), (planet[2], 0, planet[3], planet[4]))
             self.screen.blit(self.cursor.image, (st.SCREEN_WIDTH*3/8, self.cursorPos[self.cursorIndex] - 25 * st.scaleFactor))
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
+            self.screen.blit(self.beginText, (st.SCREEN_WIDTH/2 - self.beginText.get_width()/2, st.SCREEN_HEIGHT/2 - self.beginText.get_height()/2))
+
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
+            self.screen.blit(self.optionsText, (st.SCREEN_WIDTH/2 - self.optionsText.get_width()/2, st.SCREEN_HEIGHT/2 - self.optionsText.get_height()/2 + self.menuButton.get_height() * 1.5))
+
             self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
+            self.screen.blit(self.endText, (st.SCREEN_WIDTH/2 - self.endText.get_width()/2, st.SCREEN_HEIGHT/2 - self.endText.get_height()/2 + self.menuButton.get_height()* 3))
+
             self.screen.blit(self.title, (st.SCREEN_WIDTH/2 - 450, st.SCREEN_HEIGHT/6))
             pygame.display.flip()
             self.frameCounter += 1
@@ -306,19 +316,18 @@ class Game:
                                 i.image = pygame.image.load("res/transparent.png").convert_alpha()
                                 self.obstacles.remove(i.head)
                                 self.obstacles.remove(i.tail)
-                                self.lazerDestroy = pygame.mixer.Sound("sounds/lazerDestroy.wav")
-                                self.lazerDestroy.play()
                             elif type(i) == LazerEnd:
                                 curr = i.parent
                                 curr.image = pygame.image.load("res/transparent.png").convert_alpha()
                                 self.obstacles.remove(curr.head)
                                 self.obstacles.remove(curr.tail)
-                                self.lazerDestroy.play()
+                                
                             elif type(i) == Missle:
                                 i.kill()
                                 self.missleSound.stop()
                             else:
                                 i.kill()
+                            self.lazerDestroy.play()
                             bul.kill()
 
 
