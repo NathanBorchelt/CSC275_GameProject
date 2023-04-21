@@ -130,9 +130,6 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.keyPressedSpace = True
-                    if event.key == pygame.K_ESCAPE:
-                        self.running = False
-                        return False
                     if event.key == pygame.K_UP:
                         self.cursorIndex -= 1
                     if event.key == pygame.K_DOWN:
