@@ -10,6 +10,16 @@ class Game:
             # initialize pygame and create window
             pygame.init()
             pygame.mixer.init()
+
+            
+            self.playerShoot = pygame.mixer.Sound("sounds/playerShoot.wav")
+            self.gunShoot = pygame.mixer.Sound("sounds/gunShoot.wav")
+            self.missleSound = pygame.mixer.Sound("sounds/missleSound.wav")
+            self.missleBeep = pygame.mixer.Sound("sounds/missleBeep.wav")
+            #https://pixabay.com/music/upbeat-space-chillout-14194/
+            #music by penguinmusic
+            self.backgroundMusic = pygame.mixer.Sound("sounds/music.mp3")
+
             self.screen = pygame.display.set_mode((st.SCREEN_WIDTH,st.SCREEN_HEIGHT))
             pygame.display.set_caption("Joypack Jetride")
             self.clock = pygame.time.Clock()
@@ -37,6 +47,9 @@ class Game:
                     self.highscore = 0
 
         def new(self):
+            self.backgroundMusic.stop()
+            self.backgroundMusic.set_volume(25)
+            self.backgroundMusic.play(5)
             self.all_sprites = pygame.sprite.Group()
             self.ground_sprites = pygame.sprite.Group()
             self.lasers = pygame.sprite.Group()
@@ -57,7 +70,7 @@ class Game:
             self.obstacles.add(self.haz.tail)
             self.all_sprites.add(self.haz.head)
             self.all_sprites.add(self.haz.tail)
-
+            
 #Game loop
             self.timeCounter = 0
             self.font = pygame.font.Font('res/New Athletic M54.ttf', 36)
@@ -178,7 +191,7 @@ class Game:
                 self.randomHazardSpawnTime = randint(5, 10)
                 match(randint(0, 3)):
                     case _:
-                        tempHaz = Gun([self.all_sprites, self.obstacles])
+                        tempHaz = Gun([self.all_sprites, self.obstacles], self)
                         self.all_sprites.add(tempHaz)
                         self.obstacles.add(tempHaz)
             self.clock.tick(st.FPS)
@@ -208,6 +221,7 @@ class Game:
                     match (event.key):
                         case pygame.K_SPACE:
                             if len(self.bullets) < 3:
+                                self.playerShoot.play()
                                 bullet = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery)
                                 self.all_sprites.add(bullet)
                                 self.bullets.add(bullet)
@@ -264,17 +278,19 @@ class Game:
             if time.time() - self.missleStartTime > self.missleInterval:
                 self.missleStartTime = time.time()
                 self.missleInterval = randint(5, 7)
-                warning = MissleWarning(randint(0, st.SCREEN_HEIGHT))
+                warning = MissleWarning(randint(0, st.SCREEN_HEIGHT), self)
                 self.all_sprites.add(warning)
                 self.warnings.add(warning)
 
             for warning in self.warnings:
-                if warning.spawn > 3:
-                    missle = Missle(warning.rect.y)
+                if warning.frameCounter > 180:
+                    missle = Missle(warning.rect.y, self)
                     self.obstacles.add(missle)
                     self.missles.add(missle)
                     self.all_sprites.add(missle)
                     warning.kill()
+                    self.missleSound.play()
+                    
 
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
@@ -290,11 +306,17 @@ class Game:
                                 i.image = pygame.image.load("res/transparent.png").convert_alpha()
                                 self.obstacles.remove(i.head)
                                 self.obstacles.remove(i.tail)
+                                self.lazerDestroy = pygame.mixer.Sound("sounds/lazerDestroy.wav")
+                                self.lazerDestroy.play()
                             elif type(i) == LazerEnd:
                                 curr = i.parent
                                 curr.image = pygame.image.load("res/transparent.png").convert_alpha()
                                 self.obstacles.remove(curr.head)
                                 self.obstacles.remove(curr.tail)
+                                self.lazerDestroy.play()
+                            elif type(i) == Missle:
+                                i.kill()
+                                self.missleSound.stop()
                             else:
                                 i.kill()
                             bul.kill()

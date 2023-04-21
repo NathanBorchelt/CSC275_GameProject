@@ -5,6 +5,7 @@ import settings as st
 import time
 
 
+
 class Player(pygame.sprite.Sprite):
     #sprite for the Player
     def __init__(self):
@@ -103,34 +104,37 @@ class LazerEnd(pygame.sprite.Sprite):
         
 
 class MissleWarning(pygame.sprite.Sprite):
-    def __init__(self, p_y):      
+    def __init__(self, p_y, game):      
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/hazards/missleWarning.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = st.SCREEN_WIDTH - self.rect.width
         self.rect.y = p_y
-        self.spawnTime = time.time()
-        self.spawn = 0
+        self.frameCounter = 0
+        self.game = game
 
     def update(self):
-        self.spawn = time.time() - self.spawnTime
-        if self.spawn % .5 > .25:
+        if self.frameCounter%30 == 0:
             self.image = pygame.image.load("res/hazards/missleWarning.png").convert_alpha()
-        else:
+        elif self.frameCounter%30 == 15:
             self.image = pygame.image.load("res/hazards/missleWarning2.png").convert_alpha()
+            self.game.missleBeep.play()
+        self.frameCounter += 1
 
 class Missle(pygame.sprite.Sprite):
-    def __init__(self, p_y):
+    def __init__(self, p_y, game):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/hazards/missle0.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = st.SCREEN_WIDTH + self.rect.width
         self.rect.y = p_y
         self.time = time.time()
+        self.game = game
 
     def update(self):
         if self.rect.right < 0:
             self.kill()
+            self.game.missleSound.stop()
         self.rect.x -= st.playerSpeed + 25
         
 
@@ -156,7 +160,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, groups):
+    def __init__(self, groups, game):
         pygame.sprite.Sprite.__init__(self)
         self.type = choice([1,2,3,4])
         self.image = pygame.image.load("res/hazards/gun.png").convert_alpha()
@@ -171,6 +175,8 @@ class Gun(pygame.sprite.Sprite):
             self.rect.bottom = st.SCREEN_HEIGHT
         self.spawn = time.time()
         self.groups = groups
+        self.game = game
+
     def update(self):
         if self.type == 1:
             self.rect.y += 3
@@ -179,6 +185,7 @@ class Gun(pygame.sprite.Sprite):
                 bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
+                self.game.gunShoot.play()
         if self.type == 2:
             self.rect.y -= 3
             if time.time() - self.spawn > .75:
@@ -186,6 +193,7 @@ class Gun(pygame.sprite.Sprite):
                 bullet = EnemyBullet(self.rect.x, self.rect.centery, 'left')
                 for group in self.groups:
                     group.add(bullet)
+                self.game.gunShoot.play()
         if self.type == 3:
             self.rect.x -= 3
             if time.time() - self.spawn > .75:
@@ -193,6 +201,7 @@ class Gun(pygame.sprite.Sprite):
                 bullet = EnemyBullet(self.rect.centerx, self.rect.y + self.rect.h, 'down')
                 for group in self.groups:
                     group.add(bullet)
+                self.game.gunShoot.play()
         if self.type == 4:
             self.rect.x -= 3
             if time.time() - self.spawn > .75:
@@ -200,6 +209,9 @@ class Gun(pygame.sprite.Sprite):
                 bullet = EnemyBullet(self.rect.centerx, self.rect.y, 'up')
                 for group in self.groups:
                     group.add(bullet)
+                self.game.gunShoot.play()
+        if self.rect.right < 0 or self.rect.top > st.SCREEN_HEIGHT or self.rect.bottom < 0:
+            self.kill()
 
             
 
