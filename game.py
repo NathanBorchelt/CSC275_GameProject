@@ -57,6 +57,7 @@ class Game:
             self.warnings = pygame.sprite.Group()
             self.missles = pygame.sprite.Group()
             self.bullets = pygame.sprite.Group()
+            self.reward = pygame.sprite.Group()
             self.starsGroup = []
             self.player = Player()
             self.haz = Hazard(True,0)
@@ -70,7 +71,7 @@ class Game:
             self.obstacles.add(self.haz.tail)
             self.all_sprites.add(self.haz.head)
             self.all_sprites.add(self.haz.tail)
-            
+
 #Game loop
             self.timeCounter = 0
             self.titleFont = pygame.font.Font('res/Voyager.ttf', 40)
@@ -161,7 +162,7 @@ class Game:
             self.sun = pygame.image.load("res/menu/sun.png").convert_alpha()
             self.planetSheet = pygame.image.load("res/menu/planetsSheet.png").convert_alpha()
             self.planetSheet = pygame.transform.scale2x(self.planetSheet)
-            
+
             self.screen.fill((0, 0, 0))
             if self.frameCounter % 30 == 0:
                 self.stars()
@@ -298,15 +299,20 @@ class Game:
                     self.all_sprites.add(missle)
                     warning.kill()
                     self.missleSound.play()
-                    
+
 
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
-                    if pygame.sprite.collide_mask(self.player, i):
-                            with open("highscore.bin", "wb") as file:
-                                file.write(pickle.dumps(self.highscore))
-                            self.new()
-                            return
+                    if pygame.sprite.collide_mask(self.player, i) and type(i) != Coin:
+                        with open("highscore.bin", "wb") as file:
+                            file.write(pickle.dumps(self.highscore))
+                        self.new()
+                        return
+                    else:
+                        if pygame.sprite.collide_mask(self.player, i):
+                            self.player.money += i.value
+                            i.kill()
+
                 for bul in self.bullets:
                     if abs(i.rect.x - bul.rect.x) < 150:
                         if pygame.sprite.collide_mask(bul, i):
@@ -319,8 +325,12 @@ class Game:
                                 curr.image = pygame.image.load("res/transparent.png").convert_alpha()
                                 self.obstacles.remove(curr.head)
                                 self.obstacles.remove(curr.tail)
-                                
+
                             elif type(i) == Missle:
+                                reward = Coin(i,1)
+                                self.reward.add(reward)
+                                self.all_sprites.add(reward)
+                                self.obstacles.add(reward)
                                 i.kill()
                                 self.missleSound.stop()
                             else:

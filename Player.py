@@ -21,8 +21,9 @@ class Player(pygame.sprite.Sprite):
         self.rect.centerx = st.SCREEN_WIDTH/5
         self.prevPos = self.rect.x
         self.state = 0
-        
-        
+        self.money = 0
+
+
     def update(self):
         if self.prevPos < self.rect.x:
             if self.state != 1:
@@ -54,6 +55,7 @@ class Player(pygame.sprite.Sprite):
 class Ground(pygame.sprite.Sprite):
     def __init__(self, p_x):
         pygame.sprite.Sprite.__init__(self)
+
         self.image = pygame.image.load("res/hazards/tempG.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (st.SCREEN_WIDTH/4, st.SCREEN_HEIGHT/8))
         self.rect = self.image.get_rect()
@@ -80,7 +82,7 @@ class Hazard(pygame.sprite.Sprite):
         self.tail.yOffset = -((self.length)/2 * sin(radians(float(self.rot))))
 
         self.rect.left = st.SCREEN_WIDTH + offset
-        
+
         self.rect.centery = randint(0, int(st.SCREEN_HEIGHT - st.SCREEN_HEIGHT/7))
 
     def update(self):
@@ -91,7 +93,7 @@ class Hazard(pygame.sprite.Sprite):
             self.head.kill()
             self.tail.kill()
             self.kill()
-    
+
 class LazerEnd(pygame.sprite.Sprite):
     def __init__(self, parent):
         pygame.sprite.Sprite.__init__(self)
@@ -101,10 +103,10 @@ class LazerEnd(pygame.sprite.Sprite):
         self.xOffset = 0
         self.yOffset = 0
         self.parent = parent
-        
+
 
 class MissleWarning(pygame.sprite.Sprite):
-    def __init__(self, p_y, game):      
+    def __init__(self, p_y, game):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/hazards/missleWarning.png").convert_alpha()
         self.rect = self.image.get_rect()
@@ -121,6 +123,21 @@ class MissleWarning(pygame.sprite.Sprite):
             self.game.missleBeep.play()
         self.frameCounter += 1
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self,host,value):
+        pygame.sprite.Sprite.__init__(self)
+
+        self.image = pygame.Surface((30,30))
+        self.image.fill((255,255,0))
+        self.rect = self.image.get_rect()
+        self.game = host.game
+        self.value = value
+
+    def update(self):
+        if self.rect.right < 0:
+            self.kill()
+        self.rect.x -= st.playerSpeed + 25
+
 class Missle(pygame.sprite.Sprite):
     def __init__(self, p_y, game):
         pygame.sprite.Sprite.__init__(self)
@@ -136,7 +153,7 @@ class Missle(pygame.sprite.Sprite):
             self.kill()
             self.game.missleSound.stop()
         self.rect.x -= st.playerSpeed + 25
-        
+
 
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y):
@@ -213,7 +230,7 @@ class Gun(pygame.sprite.Sprite):
         if self.rect.right < 0 or self.rect.top > st.SCREEN_HEIGHT or self.rect.bottom < 0:
             self.kill()
 
-            
+
 
 class EnemyBullet(pygame.sprite.Sprite):
     def __init__(self, p_x, p_y, dir):
@@ -221,7 +238,7 @@ class EnemyBullet(pygame.sprite.Sprite):
         self.image = pygame.image.load("res/hazards/bullet.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)
-        
+
         self.dir = dir
         if self.dir == 'left':
             self.image = pygame.transform.rotate(self.image, 180)
@@ -240,5 +257,3 @@ class EnemyBullet(pygame.sprite.Sprite):
             #self.rect.x -= 3
         if self.rect.right < 0:
             self.kill()
-
-
