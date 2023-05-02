@@ -72,6 +72,7 @@ class Game:
             self.obstacles.add(self.haz.tail)
             self.all_sprites.add(self.haz.head)
             self.all_sprites.add(self.haz.tail)
+            st.playerSpeed = 4.0
 
 #Game loop
             self.timeCounter = 0
@@ -94,7 +95,9 @@ class Game:
             self.cursorGroup.add(self.cursor)
             self.cursorIndex = 0
             self.cursorPos = [st.SCREEN_HEIGHT/2, st.SCREEN_HEIGHT/2 + 1.5 * self.menuButton.get_height(),st.SCREEN_HEIGHT/2  + 3 * self.menuButton.get_height()]
+            self.controlsTexts = []
 
+            self.controlsMenu = False
             self.menu = True
             self.running = True
             self.game = False
@@ -111,9 +114,14 @@ class Game:
             self.neptune = [-94, maxY - 94, 584, 94, 94, 2.5, maxY - 94]
             self.planets = [self.mercury, self.venus, self.earth, self.mars, self.jupiter, self.saturn, self.uranus, self.neptune]
 
+            with open('controls.txt', 'r') as file:
+                self.controlsList = file.readlines()
             self.beginText = self.titleFont.render("START", True, (255,153,0))
-            self.optionsText = self.titleFont.render("OPTIONS", True, (255,153,0))
+            self.optionsText = self.titleFont.render("CTRLS", True, (255,153,0))
             self.endText = self.titleFont.render("EXIT", True, (255,153,0))
+            for line in self.controlsList:
+                self.controlsTexts.append(self.titleFont.render(line.strip(), True, (255,153,0)))
+
         def execution(self):
             while self.running:
                 while self.menu:
@@ -131,9 +139,11 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                         self.keyPressedSpace = True
-                    if event.key == pygame.K_UP:
+                        if self.cursorIndex == 1:
+                            self.controlsMenu = not self.controlsMenu
+                    if event.key == pygame.K_UP and self.controlsMenu == False:
                         self.cursorIndex -= 1
-                    if event.key == pygame.K_DOWN:
+                    if event.key == pygame.K_DOWN and self.controlsMenu == False:
                         self.cursorIndex += 1
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
@@ -151,8 +161,7 @@ class Game:
                     self.missleInterval = randint(3, 7)
                     self.game = True
                     return False
-                elif self.cursorIndex == 1:
-                    print("Options")
+
                 elif self.cursorIndex == 2:
                     self.menu == False
                     self.running = False
@@ -177,15 +186,19 @@ class Game:
                     planet[0] = -planet[3]
                     planet[1] = planet[6]
                 self.screen.blit(self.planetSheet, (planet[0], planet[1]), (planet[2], 0, planet[3], planet[4]))
-            self.screen.blit(self.cursor.image, (st.SCREEN_WIDTH*3/8, self.cursorPos[self.cursorIndex] - 25 * st.scaleFactor))
-            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
-            self.screen.blit(self.beginText, (st.SCREEN_WIDTH/2 - self.beginText.get_width()/2, st.SCREEN_HEIGHT/2 - self.beginText.get_height()/2))
+            if not self.controlsMenu:
+                self.screen.blit(self.cursor.image, (st.SCREEN_WIDTH*3/8, self.cursorPos[self.cursorIndex] - 25 * st.scaleFactor))
+                self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 - self.menuButton.get_height()/2))
+                self.screen.blit(self.beginText, (st.SCREEN_WIDTH/2 - self.beginText.get_width()/2, st.SCREEN_HEIGHT/2 - self.beginText.get_height()/2))
 
-            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
-            self.screen.blit(self.optionsText, (st.SCREEN_WIDTH/2 - self.optionsText.get_width()/2, st.SCREEN_HEIGHT/2 - self.optionsText.get_height()/2 + self.menuButton.get_height() * 1.5))
+                self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()))
+                self.screen.blit(self.optionsText, (st.SCREEN_WIDTH/2 - self.optionsText.get_width()/2, st.SCREEN_HEIGHT/2 - self.optionsText.get_height()/2 + self.menuButton.get_height() * 1.5))
 
-            self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
-            self.screen.blit(self.endText, (st.SCREEN_WIDTH/2 - self.endText.get_width()/2, st.SCREEN_HEIGHT/2 - self.endText.get_height()/2 + self.menuButton.get_height()* 3))
+                self.screen.blit(self.menuButton, (st.SCREEN_WIDTH/2 - self.menuButton.get_width()/2, st.SCREEN_HEIGHT/2 + self.menuButton.get_height()* 2.5))
+                self.screen.blit(self.endText, (st.SCREEN_WIDTH/2 - self.endText.get_width()/2, st.SCREEN_HEIGHT/2 - self.endText.get_height()/2 + self.menuButton.get_height()* 3))
+            else:
+                for i in range(len(self.controlsTexts)):
+                    self.screen.blit(self.controlsTexts[i], (st.SCREEN_WIDTH/2 - 400, st.SCREEN_HEIGHT/2 + 32*i))
 
             self.screen.blit(self.title, (st.SCREEN_WIDTH/2 - 450, st.SCREEN_HEIGHT/6))
             pygame.display.flip()
@@ -301,10 +314,10 @@ class Game:
                         powerup.kill()
                         match powerup.type:
                             case 'shotgun':
-                                self.player.shotgun = 0
+                                self.player.shotgun -= 3
                                 break
                             case _:
-                                self.player.shotgun = 0
+                                self.player.shotgun -= 3
                                 break
                         
 
@@ -333,6 +346,7 @@ class Game:
                         with open("highscore.bin", "wb") as file:
                             file.write(pickle.dumps(self.highscore))
                         self.new()
+
                         return
                     else:
                         if pygame.sprite.collide_mask(self.player, i):

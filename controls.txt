@@ -1,0 +1,3 @@
+ARROW KEYS -> move
+
+SPACEBAR -> shoot
