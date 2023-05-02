@@ -22,6 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.prevPos = self.rect.x
         self.state = 0
         self.money = 0
+        self.shotgun = 3
 
 
     def update(self):
@@ -164,15 +165,23 @@ class Cursor(pygame.sprite.Sprite):
         self.rect.center = (p_x, p_y)
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self,p_x, p_y):
+    def __init__(self,p_x, p_y, dir):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/player/bullet.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (20, 15))
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)
+        self.dir = dir
 
     def update(self):
-        self.rect.x += 10
+        if self.dir == 'right':
+            self.rect.x += 10
+        elif self.dir == 'up':
+            self.rect.x += 7
+            self.rect.y -= 3
+        elif self.dir == 'down':
+            self.rect.x += 7
+            self.rect.y += 3
         if self.rect.left > st.SCREEN_WIDTH:
             self.kill()
 
@@ -257,3 +266,12 @@ class EnemyBullet(pygame.sprite.Sprite):
             #self.rect.x -= 3
         if self.rect.right < 0:
             self.kill()
+class Powerups(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.type = choice(['shotgun'])
+        self.image = pygame.image.load(f"res/{self.type}.png")
+        self.rect = self.image.get_rect()
+        self.rect.center = (x,y)
+    def update(self):
+        self.rect.x -= 3

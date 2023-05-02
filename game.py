@@ -58,6 +58,7 @@ class Game:
             self.missles = pygame.sprite.Group()
             self.bullets = pygame.sprite.Group()
             self.reward = pygame.sprite.Group()
+            self.powerups = pygame.sprite.Group()
             self.starsGroup = []
             self.player = Player()
             self.haz = Hazard(True,0)
@@ -229,14 +230,26 @@ class Game:
                 if event.type == pygame.KEYUP:
                     match (event.key):
                         case pygame.K_SPACE:
-                            if len(self.bullets) < 3:
+                            if len(self.bullets) < 6:
                                 self.playerShoot.play()
-                                bullet = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery)
+                                bullet = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery, 'right')
                                 self.all_sprites.add(bullet)
                                 self.bullets.add(bullet)
+                                
+                                if self.player.shotgun < 3:
+                                    self.player.shotgun += 1
+                                    bullet2 = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery, 'up')
+                                    bullet3 = Bullet(self.player.rect.centerx + self.player.rect.width/2, self.player.rect.centery, 'down')
+                                    self.all_sprites.add(bullet2)
+                                    self.bullets.add(bullet2)
+                                    self.all_sprites.add(bullet3)
+                                    self.bullets.add(bullet3)
                             self.keyPressedSpace = False
                         case pygame.K_RETURN:
                             self.keyPressedSpace = False
+                            powerup = Powerups(st.SCREEN_WIDTH, st.SCREEN_HEIGHT/2)
+                            self.all_sprites.add(powerup)
+                            self.powerups.add(powerup)
                         case pygame.K_RIGHT:
                             self.keyPressedRight = False
                         case pygame.K_LEFT:
@@ -281,6 +294,19 @@ class Game:
                 self.player.rect.left = 0
             if self.player.rect.right > st.SCREEN_WIDTH:
                 self.player.rect.right = st.SCREEN_WIDTH
+
+            for powerup in self.powerups:
+                if abs(powerup.rect.x -self.player.rect.x) < 150:
+                    if pygame.sprite.collide_rect(self.player, powerup):
+                        powerup.kill()
+                        match powerup.type:
+                            case 'shotgun':
+                                self.player.shotgun = 0
+                                break
+                            case _:
+                                self.player.shotgun = 0
+                                break
+                        
 
             for warning in self.warnings:
                 warning.rect.y += (self.player.rect.y - warning.rect.y)/60
