@@ -167,7 +167,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self,p_x, p_y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("res/player/bullet.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (20, 10))
+        self.image = pygame.transform.scale(self.image, (20, 15))
         self.rect = self.image.get_rect()
         self.rect.center = (p_x, p_y)
 
