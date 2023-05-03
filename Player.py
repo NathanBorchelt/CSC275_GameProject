@@ -24,6 +24,8 @@ class Player(pygame.sprite.Sprite):
         self.money = 0
         self.shotgun = 3
 
+        
+
 
     def update(self):
         if self.prevPos < self.rect.x:
