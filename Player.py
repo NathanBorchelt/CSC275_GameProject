@@ -30,6 +30,9 @@ class Player(pygame.sprite.Sprite):
 
         
 
+<<<<<<< HEAD
+>>>>>>> da54e995d18514b9b0888c1bff4226e039eb2918
+=======
 >>>>>>> da54e995d18514b9b0888c1bff4226e039eb2918
 
     def update(self):
