@@ -77,6 +77,7 @@ class Game:
 #Game loop
             self.timeCounter = 0
             self.titleFont = pygame.font.Font('res/Voyager.ttf', 40)
+            self.ctrlsFont = pygame.font.Font('res/Audiowide-Regular.ttf', 40)
             self.score = 0
             self.frameCounter = 0
             self.randomHazardSpawnTime = 7
@@ -120,7 +121,7 @@ class Game:
             self.optionsText = self.titleFont.render("CTRLS", True, (255,153,0))
             self.endText = self.titleFont.render("EXIT", True, (255,153,0))
             for line in self.controlsList:
-                self.controlsTexts.append(self.titleFont.render(line.strip(), True, (255,153,0)))
+                self.controlsTexts.append(self.ctrlsFont.render(line.strip(), True, (255,153,0)))
 
         def execution(self):
             while self.running:
@@ -263,6 +264,7 @@ class Game:
                             powerup = Powerups(st.SCREEN_WIDTH, st.SCREEN_HEIGHT/2)
                             self.all_sprites.add(powerup)
                             self.powerups.add(powerup)
+                            
                         case pygame.K_RIGHT:
                             self.keyPressedRight = False
                         case pygame.K_LEFT:
@@ -343,15 +345,19 @@ class Game:
             for i in self.obstacles:
                 if abs(i.rect.x - self.player.rect.x) < 150:
                     if pygame.sprite.collide_mask(self.player, i) and type(i) != Coin:
-                        with open("highscore.bin", "wb") as file:
-                            file.write(pickle.dumps(self.highscore))
-                        self.new()
-
-                        return
+                        if not self.player.invincible > 0:
+                            with open("highscore.bin", "wb") as file:
+                                file.write(pickle.dumps(self.highscore))
+                            self.new()
+                            return
                     else:
                         if pygame.sprite.collide_mask(self.player, i):
                             self.player.money += i.value
                             i.kill()
+                            if self.player.money % 5 == 0:
+                                self.player.invincible = 300
+                            if self.player.money % 3 == 0:
+                                self.player.shotgun = 0
 
                 for bul in self.bullets:
                     if abs(i.rect.x - bul.rect.x) < 150:
@@ -373,10 +379,11 @@ class Game:
                                 self.obstacles.add(reward)
                                 i.kill()
                                 self.missleSound.stop()
-                            else:
+                            elif type(i) != Coin:
                                 i.kill()
-                            self.lazerDestroy.play()
-                            bul.kill()
+                            if type(i) != Coin:
+                                self.lazerDestroy.play()
+                                bul.kill()
 
 
 

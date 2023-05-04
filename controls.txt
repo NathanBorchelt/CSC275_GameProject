@@ -1,3 +1,7 @@
 ARROW KEYS -> move
 
 SPACEBAR -> shoot
+
+
+Dodge lasers, missles, and bullets
+or shoot them to destroy them

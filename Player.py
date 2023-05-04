@@ -23,9 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.state = 0
         self.money = 0
         self.shotgun = 3
-
+        self.invincible = 0
+        self.color = 170
 
     def update(self):
+        self.color += 5
+        if self.color > 255:
+            self.color = 170
         if self.prevPos < self.rect.x:
             if self.state != 1:
                 self.state = 1
@@ -43,12 +47,15 @@ class Player(pygame.sprite.Sprite):
                 self.frameCounter = 0
             self.image = pygame.image.load(f"res/player/UFO{int(self.frameCounter /10 % 3)}.png").convert_alpha()
         self.image = pygame.transform.scale_by(self.image, st.scaleFactor)
+        if self.invincible > 0:
+            self.image.fill(pygame.Color(0, 0, self.color), None, pygame.BLEND_RGB_MAX)
+            self.invincible -= 1
         self.prevPos = self.rect.x
         self.frameCounter += 1
 
     def speedUpdate(self,factor):
         #exponential speed increase
-        maxSpeed = 25
+        maxSpeed = 15
         if(st.playerSpeed < maxSpeed):
             st.playerSpeed = round(st.playerSpeed ** factor,3)
         else:
@@ -131,13 +138,14 @@ class Coin(pygame.sprite.Sprite):
         self.image = pygame.Surface((30,30))
         self.image.fill((255,255,0))
         self.rect = self.image.get_rect()
-        self.game = host.game
+        #self.game = host.game
         self.value = value
+        self.rect.center = host.rect.center
 
     def update(self):
         if self.rect.right < 0:
             self.kill()
-        self.rect.x -= st.playerSpeed + 25
+        self.rect.x -= st.playerSpeed
 
 class Missle(pygame.sprite.Sprite):
     def __init__(self, p_y, game):
