@@ -23,8 +23,14 @@ class Player(pygame.sprite.Sprite):
         self.state = 0
         self.money = 0
         self.shotgun = 3
+<<<<<<< HEAD
         self.invincible = 0
         self.color = 170
+=======
+
+        
+
+>>>>>>> da54e995d18514b9b0888c1bff4226e039eb2918
 
     def update(self):
         self.color += 5

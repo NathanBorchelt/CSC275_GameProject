@@ -261,10 +261,6 @@ class Game:
                             self.keyPressedSpace = False
                         case pygame.K_RETURN:
                             self.keyPressedSpace = False
-                            powerup = Powerups(st.SCREEN_WIDTH, st.SCREEN_HEIGHT/2)
-                            self.all_sprites.add(powerup)
-                            self.powerups.add(powerup)
-                            
                         case pygame.K_RIGHT:
                             self.keyPressedRight = False
                         case pygame.K_LEFT:

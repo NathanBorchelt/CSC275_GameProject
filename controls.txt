@@ -2,6 +2,10 @@ ARROW KEYS -> move
 
 SPACEBAR -> shoot
 
+3 Coins -> Shotgun
+
+5 Coins -> Invincible
+
 
 Dodge lasers, missles, and bullets
 or shoot them to destroy them
