@@ -58,7 +58,7 @@ class Player(pygame.sprite.Sprite):
 
     def speedUpdate(self,factor):
         #exponential speed increase
-        maxSpeed = 15
+        maxSpeed = 25
         if(st.playerSpeed < maxSpeed):
             st.playerSpeed = round(st.playerSpeed ** factor,3)
         else:
